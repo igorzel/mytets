@@ -20,7 +20,7 @@ ldflags into `internal/version.Version`, with `dev` fallback when not provided.
 **Target Platform**: Linux, macOS, Windows CLI environments
 **Project Type**: Single-binary CLI application  
 **Performance Goals**: `mytets version` completion under 100 ms; minimal allocations  
-**Constraints**: Plain-text-only output for `version`; no custom parsing in `main`; build-time ldflags injection; clear non-zero exits on invalid invocation  
+**Constraints**: Plain-text default output for `version` with optional `--output json`; no custom parsing in `main`; build-time ldflags injection; clear non-zero exits on invalid invocation  
 **Scale/Scope**: Single command addition (`version`) plus foundational CLI package separation (`main` -> `internal/cli` and `internal/flags`)
 
 ## Constitution Check
@@ -35,9 +35,6 @@ ldflags into `internal/version.Version`, with `dev` fallback when not provided.
 - Principle VI (Documentation): PASS. command help and README usage updates.
 - Principle VII (Distribution): PASS. version injected by `-ldflags` in build.
 - Principle VIII (Go Practices): PASS. parsing and reusable logic outside `main`.
-
-Constitution exception acknowledged from spec clarification:
-- `mytets version` is plain-text only and does not provide `--output json`.
 
 ## Project Structure
 

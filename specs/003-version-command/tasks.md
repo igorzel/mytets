@@ -68,8 +68,10 @@
 ### Implementation for User Story 2
 
 - [ ] T020 [US2] Finalize invocation contract behavior mapping parser errors to stderr/non-zero exits in internal/cli/run.go
-- [ ] T021 [US2] Ensure command output remains plain-text-only with no JSON mode in internal/cli/version_cmd.go
+- [ ] T021 [US2] Ensure default output remains plain text while supporting `--output json` in internal/cli/version_cmd.go
 - [ ] T022 [US2] Document script/CI usage and ldflags injection examples in README.md
+- [ ] T027 [US2] Implement `--output json` flag handling in internal/flags/parser.go and internal/cli/version_cmd.go
+- [ ] T028 [P] [US2] Add integration tests for plain output versus JSON output contract in tests/integration/version_command_test.go
 
 **Checkpoint**: `mytets version` is automation-safe and contract-compliant.
 
@@ -83,6 +85,13 @@
 - [ ] T024 [P] Update quickstart validation commands to match final implementation in specs/003-version-command/quickstart.md
 - [ ] T025 [P] Verify feature summary and constraints alignment in specs/003-version-command/plan.md
 - [ ] T026 Run final test pass and record results in specs/003-version-command/quickstart.md
+- [ ] T029 [P] Add performance validation test for `mytets version` (<100ms threshold) in tests/integration/version_performance_test.go
+- [ ] T030 [P] Add CI step for race detector execution (`go test -race ./...`) in .github/workflows/ci.yml
+- [ ] T031 [P] Add CI step for `go vet` and `staticcheck` in .github/workflows/ci.yml
+- [ ] T032 [P] Add CI step for `golangci-lint` in .github/workflows/ci.yml
+- [ ] T033 [P] Add CI matrix validation for Linux/macOS/Windows integration tests in .github/workflows/ci.yml
+- [ ] T034 Add quickstart verification commands for race/lint/performance checks in specs/003-version-command/quickstart.md
+- [ ] T035 Run full constitution gate validation and record results in specs/003-version-command/quickstart.md
 
 ---
 
@@ -106,8 +115,8 @@
 - Setup: none (shared files).
 - Foundational: T009 and T010 can run in parallel.
 - US1: T011 and T012 can run in parallel before implementation tasks.
-- US2: T017, T018, and T019 can run in parallel.
-- Polish: T023, T024, and T025 can run in parallel.
+- US2: T017, T018, T019, and T028 can run in parallel.
+- Polish: T023, T024, T025, T029, T030, T031, T032, and T033 can run in parallel.
 
 ---
 

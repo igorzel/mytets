@@ -10,7 +10,7 @@
 ### Session 2026-04-21
 
 - Q: Where should the version variable live for ldflags injection? → A: `internal/version` package (`internal/version.Version`)
-- Q: Should `mytets version` support `--output json`? → A: No, this command is plain-text only; constitution exception is documented for this command.
+- Q: Should `mytets version` support `--output json`? → A: Yes, plain text remains default and `--output json` is supported for automation.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -51,8 +51,9 @@ compare it against an expected release tag or embed it in a release artifact.
 automation. The format must be stable and unambiguous.
 
 **Independent Test**: Capture stdout of `mytets version` in a shell variable;
-assert the string matches the regex `^[0-9]+\.[0-9]+\.[0-9]+$` and that the
-exit code is 0.
+assert the plain output matches `^[0-9]+\.[0-9]+\.[0-9]+$` (or `dev` fallback),
+assert `mytets version --output json` returns a valid JSON object, and verify
+the exit code is 0.
 
 **Acceptance Scenarios**:
 
@@ -65,6 +66,10 @@ exit code is 0.
    **When** the pipeline checks the exit code,
    **Then** the exit code is 0 allowing the pipeline to continue without error.
 
+3. **Given** a script runs `mytets version --output json`,
+   **When** stdout is parsed as JSON,
+   **Then** parsing succeeds and includes the expected version value.
+
 ---
 
 ### Edge Cases
@@ -73,10 +78,10 @@ exit code is 0.
   `mytets version --foo`)? → The tool MUST print an appropriate error to stderr
   and exit with a non-zero code (standard Cobra behaviour; no extra
   implementation required).
-- What happens when a user expects JSON output for `mytets version`? → This
-  command is explicitly plain-text-only and MUST NOT emit JSON; this is a
-  documented command-level exception to the broader project automation-output
-  guidance.
+- What happens when `mytets version --output json` is used? → The tool MUST
+  output a valid JSON object with the version value for automation workflows.
+- What happens when an unsupported output format is requested? → The tool MUST
+  print a clear error to stderr and exit with a non-zero code.
 - What happens when the version string was not injected at build time (empty
   `ldflags`)? → A fallback sentinel value (e.g., `dev`) MUST be displayed so
   the command never exits with an error due to a missing version.
@@ -104,8 +109,8 @@ exit code is 0.
   injected value.
 - **FR-009**: Integration tests MUST verify the full end-to-end CLI invocation,
   including exit code and stdout content.
-- **FR-010**: `mytets version` MUST remain plain-text-only and MUST NOT emit
-  JSON output for this feature.
+- **FR-010**: `mytets version` MUST output plain text by default and MUST
+  support `--output json` for automation.
 
 ## Success Criteria *(mandatory)*
 
@@ -113,8 +118,9 @@ exit code is 0.
 
 - **SC-001**: `mytets version` completes and exits in under 100 ms on any
   supported platform.
-- **SC-002**: The output is exactly one line whose content matches the
-  `X.Y.Z` pattern (or the `dev` fallback) — verified by automated tests.
+- **SC-002**: The output is exactly one line in plain mode whose content matches
+  `X.Y.Z` (or the `dev` fallback), and a valid JSON object in JSON mode —
+  verified by automated tests.
 - **SC-003**: Exit code is 0 for every invocation of `mytets version` without
   unexpected arguments — verified by integration tests on Linux, macOS, and
   Windows.
@@ -133,8 +139,8 @@ exit code is 0.
   `-X github.com/igorzel/mytets/internal/version.Version=<semver>`.
 - The build system is responsible for supplying the correct `-ldflags` argument;
   the spec does not mandate a specific CI/CD toolchain.
-- `mytets version` is an explicit exception to constitution-level optional JSON
-  output guidance; this command returns only a plain version string.
+- `mytets version` follows project output policy: human-readable plain text by
+  default, with optional JSON output for automation.
 - The `dev` fallback is sufficient for local development builds where no version
   is injected; no warning or error is needed for the fallback case.
 - Mobile/browser output support is out of scope; only terminal stdout is
