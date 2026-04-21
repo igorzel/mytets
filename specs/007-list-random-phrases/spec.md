@@ -101,8 +101,8 @@ A user starts the application when the embedded phrase source is missing or empt
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can run the `list` command with default settings and receive a 5-item phrase list in under 1 second
-- **SC-002**: Users can request a custom list size and receive up to the requested number of phrases in under 1 second
+- **SC-001**: Users can run the `list` command with default settings and receive a 5-item phrase list in under 100 ms
+- **SC-002**: Users can request a custom list size and receive up to the requested number of phrases in under 100 ms
 - **SC-003**: 100% of phrases within a single command result are unique
 - **SC-004**: 100% of successful plain-text and JSON invocations of the `list` command exit with code 0
 - **SC-005**: 100% of startup failures caused by a missing or empty phrase source display an error on stderr and prevent phrase-based commands from succeeding
