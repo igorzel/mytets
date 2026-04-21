@@ -35,12 +35,13 @@
 
 **Goal**: Running `mytets version` prints exactly one plain version string and exits successfully.
 
-**Independent Test**: Build binary with `-ldflags` version injection, run `mytets version`, verify stdout is exactly one line `X.Y.Z`, stderr empty, and exit code 0.
+**Independent Test**: Build binary with `-ldflags` version injection (for example `1.2.3`), run `mytets version`, verify stdout is exactly one line matching the injected value, stderr empty, and exit code 0.
 
 ### Tests for User Story 1
 
 - [ ] T011 [P] [US1] Add unit tests for semantic version and fallback rendering in internal/version/version_test.go
 - [ ] T012 [P] [US1] Add integration test for successful `mytets version` invocation output/exit code in tests/integration/version_command_test.go
+- [ ] T038 [P] [US1] Add integration test that builds with ldflags-injected version (for example `1.2.3`) and verifies `mytets version` prints exactly the injected value with exit code 0 and empty stderr in tests/integration/version_command_test.go
 
 ### Implementation for User Story 1
 
@@ -57,13 +58,14 @@
 
 **Goal**: Scripts and CI can reliably capture stable plain-text output and success status.
 
-**Independent Test**: Capture stdout in a script-like test, verify `^[0-9]+\.[0-9]+\.[0-9]+$` (or `dev` fallback), stderr empty on success, exit code 0.
+**Independent Test**: Capture stdout in a script-like test, verify `^[0-9]+\.[0-9]+\.[0-9]+$` (or `dev` fallback), stderr empty on success, exit code 0, and verify unsupported output formats (for example `--output yaml`) return a clear stderr message with a non-zero exit code.
 
 ### Tests for User Story 2
 
 - [ ] T017 [P] [US2] Add integration test for regex-compatible scripting capture and empty stderr in tests/integration/version_command_test.go
 - [ ] T018 [P] [US2] Add integration test for fallback `dev` output when version is not injected in tests/integration/version_command_test.go
 - [ ] T019 [P] [US2] Add integration test for invalid-flag non-zero exit behavior in tests/integration/version_command_test.go
+- [ ] T039 [P] [US2] Add integration test for unsupported output format (for example `--output yaml`) asserting clear stderr message and non-zero exit code in tests/integration/version_command_test.go
 
 ### Implementation for User Story 2
 
@@ -116,8 +118,8 @@
 
 - Setup: none (shared files).
 - Foundational: T009 and T010 can run in parallel.
-- US1: T011 and T012 can run in parallel before implementation tasks.
-- US2: T017, T018, T019, and T028 can run in parallel.
+- US1: T011, T012, and T038 can run in parallel before implementation tasks.
+- US2: T017, T018, T019, T028, and T039 can run in parallel.
 - Polish: T023, T024, T025, T029, T030, T031, T032, T033, T036, and T037 can run in parallel.
 
 ---
@@ -128,6 +130,7 @@
 # Parallel test authoring
 Task T011: internal/version/version_test.go
 Task T012: tests/integration/version_command_test.go
+Task T038: tests/integration/version_command_test.go
 ```
 
 ## Parallel Example: User Story 2
@@ -137,6 +140,7 @@ Task T012: tests/integration/version_command_test.go
 Task T017: tests/integration/version_command_test.go
 Task T018: tests/integration/version_command_test.go
 Task T019: tests/integration/version_command_test.go
+Task T039: tests/integration/version_command_test.go
 ```
 
 ---
