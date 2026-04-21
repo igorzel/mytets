@@ -28,7 +28,8 @@ ldflags into `internal/version.Version`, with `dev` fallback when not provided.
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - Principle I (Clean Code): PASS. `main` will delegate to explicit package APIs.
-- Principle II (Simplicity): PASS. `mytets version` accepts no additional args.
+- Principle II (Simplicity): PASS. `mytets version` is no-arg by default and
+	supports only one documented automation flag for output format.
 - Principle III (Reliability): PASS. deterministic stdout/stderr and exit code.
 - Principle IV (Performance): PASS. constant-time command path, no I/O.
 - Principle V (Extensibility): PASS. command registration in `internal/cli`.
@@ -81,7 +82,8 @@ constitution requirement for reusable logic in `internal/`.
 ## Post-Design Constitution Check
 
 - Principle I (Clean Code): PASS. clear package boundaries and small APIs.
-- Principle II (Simplicity): PASS. version command remains no-arg/no-flag.
+- Principle II (Simplicity): PASS. version command remains no-arg by default and
+	supports only one documented automation flag for output format.
 - Principle III (Reliability): PASS. explicit success/error output contracts.
 - Principle IV (Performance): PASS. O(1) command path and no runtime I/O.
 - Principle V (Extensibility): PASS. additional subcommands can be registered in

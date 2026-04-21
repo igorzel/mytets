@@ -92,8 +92,9 @@ the exit code is 0.
 
 - **FR-001**: The tool MUST expose a `version` subcommand that is invocable as
   `mytets version`.
-- **FR-002**: `mytets version` MUST print the application version to stdout in
-  `X.Y.Z` format (e.g., `1.0.1`).
+- **FR-002**: `mytets version` MUST print the application version to stdout as a
+  semantic version string in `X.Y.Z` format (e.g., `1.0.1`), or `dev` when no
+  build-time version was injected.
 - **FR-003**: The output MUST be a single plain string — no labels, no
   decoration, no extra lines beyond the standard trailing newline.
 - **FR-004**: The `version` subcommand MUST NOT require any additional arguments
@@ -131,9 +132,9 @@ the exit code is 0.
 
 ## Assumptions
 
-- The existing project already uses `cobra` for command routing; the `version`
-  subcommand will be registered as a new `cobra.Command` within the same CLI
-  structure.
+- The feature introduces `github.com/spf13/cobra` for command routing if not
+  already present in the repository; the `version` subcommand will be
+  registered as a `cobra.Command` within the CLI structure.
 - The version string MUST be injected via linker flags targeting the variable
   `Version` in the `internal/version` package; the canonical ldflags value is
   `-X github.com/igorzel/mytets/internal/version.Version=<semver>`.

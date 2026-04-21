@@ -68,9 +68,9 @@
 ### Implementation for User Story 2
 
 - [ ] T020 [US2] Finalize invocation contract behavior mapping parser errors to stderr/non-zero exits in internal/cli/run.go
-- [ ] T021 [US2] Ensure default output remains plain text while supporting `--output json` in internal/cli/version_cmd.go
+- [ ] T021 [US2] Verify default plain-text output remains unchanged when no output flag is provided (covered by integration tests)
 - [ ] T022 [US2] Document script/CI usage and ldflags injection examples in README.md
-- [ ] T027 [US2] Implement `--output json` flag handling in internal/flags/parser.go and internal/cli/version_cmd.go
+- [ ] T027 [US2] Implement output `json` flag parsing and version JSON rendering in internal/flags/parser.go and internal/cli/version_cmd.go
 - [ ] T028 [P] [US2] Add integration tests for plain output versus JSON output contract in tests/integration/version_command_test.go
 
 **Checkpoint**: `mytets version` is automation-safe and contract-compliant.
@@ -92,6 +92,8 @@
 - [ ] T033 [P] Add CI matrix validation for Linux/macOS/Windows integration tests in .github/workflows/ci.yml
 - [ ] T034 Add quickstart verification commands for race/lint/performance checks in specs/003-version-command/quickstart.md
 - [ ] T035 Run full constitution gate validation and record results in specs/003-version-command/quickstart.md
+- [ ] T036 [P] Add dependency exception justification for `github.com/spf13/cobra` in README.md, including why standard-library parsing was not selected
+- [ ] T037 [P] Add integration test to verify concise help text for `version` command and `--output` flag in tests/integration/version_command_test.go
 
 ---
 
@@ -116,7 +118,7 @@
 - Foundational: T009 and T010 can run in parallel.
 - US1: T011 and T012 can run in parallel before implementation tasks.
 - US2: T017, T018, T019, and T028 can run in parallel.
-- Polish: T023, T024, T025, T029, T030, T031, T032, and T033 can run in parallel.
+- Polish: T023, T024, T025, T029, T030, T031, T032, T033, T036, and T037 can run in parallel.
 
 ---
 
