@@ -69,6 +69,7 @@ A user starts the application when the embedded phrase source is missing or empt
 - The requested count is exactly equal to the number of available phrases
 - The phrase source contains duplicate entries; the returned list still must not repeat the same phrase text within a single command result
 - The user provides an invalid `--count` value; the command should fail consistently with existing CLI argument validation rules
+- The user provides `--count 0`; the command should return an empty result (zero lines in plain text, empty JSON array `[]`) and exit with code 0, since zero is a valid non-negative integer
 - The phrase source is missing or contains zero usable phrases at startup
 
 ## Requirements *(mandatory)*

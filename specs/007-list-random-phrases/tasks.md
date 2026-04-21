@@ -44,7 +44,7 @@
 
 ### Tests for User Story 1
 
-- [ ] T004 [US1] Write integration tests for plain-text default (5 lines), `--count N`, and oversized-count edge case in tests/integration/list_command_test.go
+- [ ] T004 [US1] Write integration tests for plain-text default (5 lines), `--count N`, oversized-count edge case, and invalid `--count` input (e.g., `--count abc`, `--count -1`) verifying non-zero exit code and stderr output in tests/integration/list_command_test.go
 
 ### Implementation for User Story 1
 
@@ -83,7 +83,7 @@
 
 ### Tests for User Story 3
 
-- [ ] T011 [US3] Add integration tests verifying that the list command fails and writes to stderr when `phrases.Messages()` returns no data in tests/integration/list_command_test.go
+- [ ] T011 [US3] Add unit test in internal/commands/list/list_test.go verifying that the list command returns an error and writes to stderr when the phrase source function is injected to return an empty slice (integration-level test is not feasible because `internal/phrases.init()` panics before command execution when the embedded source is invalid)
 - [ ] T012 [P] [US3] Add unit test for Select when called with empty input slice, confirming it returns an empty result without panicking in internal/listing/listing_test.go
 
 ### Implementation for User Story 3
