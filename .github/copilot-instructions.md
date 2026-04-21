@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-04-21
 
 ## Active Technologies
+- Go 1.26.2 + `github.com/spf13/cobra` (already present) (speckit-try)
+- N/A (stateless command) (speckit-try)
 
 - Go 1.26.2 in repository; feature constrained to Go 1.25+ compatibility + `github.com/spf13/cobra` for command/flag parsing (new dependency), Go standard library (003-version-command)
 
@@ -22,6 +24,7 @@ tests/
 Go 1.26.2 in repository; feature constrained to Go 1.25+ compatibility: Follow standard conventions
 
 ## Recent Changes
+- speckit-try: Added Go 1.26.2 + `github.com/spf13/cobra` (already present)
 
 - 003-version-command: Added Go 1.26.2 in repository; feature constrained to Go 1.25+ compatibility + `github.com/spf13/cobra` for command/flag parsing (new dependency), Go standard library
 
