@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"os"
+
+	"github.com/igorzel/mytets/internal/cli"
 )
 
 func main() {
-	fmt.Println("Тому шо треба не всякой х*йньой заніматься, а жити інтєрєсно!")
+	os.Exit(cli.Execute())
 }

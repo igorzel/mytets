@@ -7,10 +7,10 @@
 
 **Purpose**: Initialize dependencies and base CLI wiring entrypoint.
 
-- [ ] T001 Add Cobra dependency declarations in go.mod and go.sum
-- [ ] T002 Create CLI package skeleton files in internal/cli/run.go, internal/cli/root.go, and internal/cli/version_cmd.go
-- [ ] T003 Create dedicated parser package scaffold in internal/flags/parser.go
-- [ ] T004 Update process entrypoint to delegate parsing/execution to package code in cmd/mytets/main.go
+- [X] T001 Add Cobra dependency declarations in go.mod and go.sum
+- [X] T002 Create CLI package skeleton files in internal/cli/run.go, internal/cli/root.go, and internal/cli/version_cmd.go
+- [X] T003 Create dedicated parser package scaffold in internal/flags/parser.go
+- [X] T004 Update process entrypoint to delegate parsing/execution to package code in cmd/mytets/main.go
 
 ---
 
@@ -20,12 +20,12 @@
 
 **⚠️ CRITICAL**: No user story implementation begins before this phase is complete.
 
-- [ ] T005 Implement build-time version holder with fallback normalization in internal/version/version.go
-- [ ] T006 Implement parser configuration type and constructor for CLI wiring in internal/flags/parser.go
-- [ ] T007 Implement root command builder with injected parser config in internal/cli/root.go
-- [ ] T008 Implement execution entrypoints `Execute` and `ExecuteArgs` with stdout/stderr capture in internal/cli/run.go
-- [ ] T009 [P] Add parser-focused unit tests for configuration behavior in internal/flags/parser_test.go
-- [ ] T010 [P] Add runner seam unit tests for stdout/stderr/exit-code capture in internal/cli/run_test.go
+- [X] T005 Implement build-time version holder with fallback normalization in internal/version/version.go
+- [X] T006 Implement parser configuration type and constructor for CLI wiring in internal/flags/parser.go
+- [X] T007 Implement root command builder with injected parser config in internal/cli/root.go
+- [X] T008 Implement execution entrypoints `Execute` and `ExecuteArgs` with stdout/stderr capture in internal/cli/run.go
+- [X] T009 [P] Add parser-focused unit tests for configuration behavior in internal/flags/parser_test.go
+- [X] T010 [P] Add runner seam unit tests for stdout/stderr/exit-code capture in internal/cli/run_test.go
 
 **Checkpoint**: Foundation complete; user stories can be implemented and tested independently.
 
@@ -39,16 +39,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T011 [P] [US1] Add unit tests for semantic version and fallback rendering in internal/version/version_test.go
-- [ ] T012 [P] [US1] Add integration test for successful `mytets version` invocation output/exit code in tests/integration/version_command_test.go
-- [ ] T038 [P] [US1] Add integration test that builds with ldflags-injected version (for example `1.2.3`) and verifies `mytets version` prints exactly the injected value with exit code 0 and empty stderr in tests/integration/version_command_test.go
+- [X] T011 [P] [US1] Add unit tests for semantic version and fallback rendering in internal/version/version_test.go
+- [X] T012 [P] [US1] Add integration test for successful `mytets version` invocation output/exit code in tests/integration/version_command_test.go
+- [X] T038 [P] [US1] Add integration test that builds with ldflags-injected version (for example `1.2.3`) and verifies `mytets version` prints exactly the injected value with exit code 0 and empty stderr in tests/integration/version_command_test.go
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implement `version` Cobra subcommand handler to print single plain string in internal/cli/version_cmd.go
-- [ ] T014 [US1] Register `version` subcommand on root command in internal/cli/root.go
-- [ ] T015 [US1] Wire command execution path so `mytets version` reaches handler in internal/cli/run.go
-- [ ] T016 [US1] Enforce no additional args for `version` command behavior in internal/cli/version_cmd.go
+- [X] T013 [US1] Implement `version` Cobra subcommand handler to print single plain string in internal/cli/version_cmd.go
+- [X] T014 [US1] Register `version` subcommand on root command in internal/cli/root.go
+- [X] T015 [US1] Wire command execution path so `mytets version` reaches handler in internal/cli/run.go
+- [X] T016 [US1] Enforce no additional args for `version` command behavior in internal/cli/version_cmd.go
 
 **Checkpoint**: `mytets version` is fully functional for interactive developer usage.
 
@@ -62,18 +62,18 @@
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Add integration test for regex-compatible scripting capture and empty stderr in tests/integration/version_command_test.go
-- [ ] T018 [P] [US2] Add integration test for fallback `dev` output when version is not injected in tests/integration/version_command_test.go
-- [ ] T019 [P] [US2] Add integration test for invalid-flag non-zero exit behavior in tests/integration/version_command_test.go
-- [ ] T039 [P] [US2] Add integration test for unsupported output format (for example `--output yaml`) asserting clear stderr message and non-zero exit code in tests/integration/version_command_test.go
+- [X] T017 [P] [US2] Add integration test for regex-compatible scripting capture and empty stderr in tests/integration/version_command_test.go
+- [X] T018 [P] [US2] Add integration test for fallback `dev` output when version is not injected in tests/integration/version_command_test.go
+- [X] T019 [P] [US2] Add integration test for invalid-flag non-zero exit behavior in tests/integration/version_command_test.go
+- [X] T039 [P] [US2] Add integration test for unsupported output format (for example `--output yaml`) asserting clear stderr message and non-zero exit code in tests/integration/version_command_test.go
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Finalize invocation contract behavior mapping parser errors to stderr/non-zero exits in internal/cli/run.go
-- [ ] T021 [US2] Verify default plain-text output remains unchanged when no output flag is provided (covered by integration tests)
-- [ ] T022 [US2] Document script/CI usage and ldflags injection examples in README.md
-- [ ] T027 [US2] Implement output `json` flag parsing and version JSON rendering in internal/flags/parser.go and internal/cli/version_cmd.go
-- [ ] T028 [P] [US2] Add integration tests for plain output versus JSON output contract in tests/integration/version_command_test.go
+- [X] T020 [US2] Finalize invocation contract behavior mapping parser errors to stderr/non-zero exits in internal/cli/run.go
+- [X] T021 [US2] Verify default plain-text output remains unchanged when no output flag is provided (covered by integration tests)
+- [X] T022 [US2] Document script/CI usage and ldflags injection examples in README.md
+- [X] T027 [US2] Implement output `json` flag parsing and version JSON rendering in internal/flags/parser.go and internal/cli/version_cmd.go
+- [X] T028 [P] [US2] Add integration tests for plain output versus JSON output contract in tests/integration/version_command_test.go
 
 **Checkpoint**: `mytets version` is automation-safe and contract-compliant.
 
@@ -83,19 +83,19 @@
 
 **Purpose**: Final quality, docs consistency, and validation against quickstart.
 
-- [ ] T023 [P] Update command contract notes after implementation in specs/003-version-command/contracts/cli-version-contract.md
-- [ ] T024 [P] Update quickstart validation commands to match final implementation in specs/003-version-command/quickstart.md
-- [ ] T025 [P] Verify feature summary and constraints alignment in specs/003-version-command/plan.md
-- [ ] T026 Run final test pass and record results in specs/003-version-command/quickstart.md
-- [ ] T029 [P] Add performance validation test for `mytets version` (<100ms threshold) in tests/integration/version_performance_test.go
-- [ ] T030 [P] Add CI step for race detector execution (`go test -race ./...`) in .github/workflows/ci.yml
-- [ ] T031 [P] Add CI step for `go vet` and `staticcheck` in .github/workflows/ci.yml
-- [ ] T032 [P] Add CI step for `golangci-lint` in .github/workflows/ci.yml
-- [ ] T033 [P] Add CI matrix validation for Linux/macOS/Windows integration tests in .github/workflows/ci.yml
-- [ ] T034 Add quickstart verification commands for race/lint/performance checks in specs/003-version-command/quickstart.md
-- [ ] T035 Run full constitution gate validation and record results in specs/003-version-command/quickstart.md
-- [ ] T036 [P] Add dependency exception justification for `github.com/spf13/cobra` in README.md, including why standard-library parsing was not selected
-- [ ] T037 [P] Add integration test to verify concise help text for `version` command and `--output` flag in tests/integration/version_command_test.go
+- [X] T023 [P] Update command contract notes after implementation in specs/003-version-command/contracts/cli-version-contract.md
+- [X] T024 [P] Update quickstart validation commands to match final implementation in specs/003-version-command/quickstart.md
+- [X] T025 [P] Verify feature summary and constraints alignment in specs/003-version-command/plan.md
+- [X] T026 Run final test pass and record results in specs/003-version-command/quickstart.md
+- [X] T029 [P] Add performance validation test for `mytets version` (<100ms threshold) in tests/integration/version_performance_test.go
+- [X] T030 [P] Add CI step for race detector execution (`go test -race ./...`) in .github/workflows/ci.yml
+- [X] T031 [P] Add CI step for `go vet` and `staticcheck` in .github/workflows/ci.yml
+- [X] T032 [P] Add CI step for `golangci-lint` in .github/workflows/ci.yml
+- [X] T033 [P] Add CI matrix validation for Linux/macOS/Windows integration tests in .github/workflows/ci.yml
+- [X] T034 Add quickstart verification commands for race/lint/performance checks in specs/003-version-command/quickstart.md
+- [X] T035 Run full constitution gate validation and record results in specs/003-version-command/quickstart.md
+- [X] T036 [P] Add dependency exception justification for `github.com/spf13/cobra` in README.md, including why standard-library parsing was not selected
+- [X] T037 [P] Add integration test to verify concise help text for `version` command and `--output` flag in tests/integration/version_command_test.go
 
 ---
 
