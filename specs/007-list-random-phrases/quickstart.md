@@ -64,8 +64,26 @@ Add `tests/integration/list_command_test.go` to verify:
 Run focused checks during implementation:
 
 ```bash
-go test ./internal/listing ./internal/commands/list ./tests/integration
+go test ./internal/listing/... ./internal/commands/list/... ./tests/integration/...
 go test ./...
+```
+
+### Verify CLI behavior manually
+
+```bash
+go build -o ./bin/mytets ./cmd/mytets
+
+# Plain text (default 5, capped to available phrases)
+./bin/mytets list
+
+# Custom count
+./bin/mytets list --count 2
+
+# JSON output
+./bin/mytets --output json list
+
+# JSON with custom count
+./bin/mytets --output json list --count 3
 ```
 
 If command registration or global output parsing changes are touched, rerun the broader test suite before merging.

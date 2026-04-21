@@ -102,6 +102,43 @@ Output:
 {"message":"Example message 2"}
 ```
 
+### list
+
+Print a list of random phrases from the embedded phrase set:
+
+```bash
+mytets list
+```
+
+Output (plain text, default; 5 unique phrases, one per line):
+
+```text
+Example message 3
+Fake message, tbd
+Example message 1
+Example message 2
+```
+
+Request a specific number of phrases:
+
+```bash
+mytets list --count 2
+```
+
+JSON output:
+
+```bash
+mytets --output json list
+# or with a custom count
+mytets --output json list --count 3
+```
+
+Output:
+
+```json
+[{"message":"Example message 3"},{"message":"Fake message, tbd"},{"message":"Example message 1"}]
+```
+
 ## Dependency Rationale
 
 This project introduces `github.com/spf13/cobra` for CLI command routing.

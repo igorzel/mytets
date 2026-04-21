@@ -19,7 +19,7 @@
 
 **Purpose**: Create the reusable listing package scaffold that all user stories depend on
 
-- [ ] T001 Create reusable listing package scaffold with package declaration and exported function stubs in internal/listing/listing.go
+- [X] T001 Create reusable listing package scaffold with package declaration and exported function stubs in internal/listing/listing.go
 
 ---
 
@@ -29,8 +29,8 @@
 
 **⚠️ CRITICAL**: No user story work starts before this phase is complete
 
-- [ ] T002 Implement `Select(phrases []string, count int, rng *rand.Rand) []string` in internal/listing/listing.go — unique without-replacement sampling capped at available unique phrase count
-- [ ] T003 [P] Implement unit tests for Select covering default count, custom count, oversized count cap, uniqueness guarantee, deduplication of duplicate source entries, and deterministic seam in internal/listing/listing_test.go
+- [X] T002 Implement `Select(phrases []string, count int, rng *rand.Rand) []string` in internal/listing/listing.go — unique without-replacement sampling capped at available unique phrase count
+- [X] T003 [P] Implement unit tests for Select covering default count, custom count, oversized count cap, uniqueness guarantee, deduplication of duplicate source entries, and deterministic seam in internal/listing/listing_test.go
 
 **Checkpoint**: Foundation complete. User stories can now proceed independently.
 
@@ -44,13 +44,13 @@
 
 ### Tests for User Story 1
 
-- [ ] T004 [US1] Write integration tests for plain-text default (5 lines), `--count N`, oversized-count edge case, and invalid `--count` input (e.g., `--count abc`, `--count -1`) verifying non-zero exit code and stderr output in tests/integration/list_command_test.go
+- [X] T004 [US1] Write integration tests for plain-text default (5 lines), `--count N`, oversized-count edge case, and invalid `--count` input (e.g., `--count abc`, `--count -1`) verifying non-zero exit code and stderr output in tests/integration/list_command_test.go
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Implement list Cobra command with command-specific `--count` flag (default 5) calling `listing.Select` and printing plain-text output via `cmd.OutOrStdout()` in internal/commands/list/list.go
-- [ ] T006 [P] [US1] Implement unit tests for list command construction, --count flag default, and plain-text output formatting in internal/commands/list/list_test.go
-- [ ] T007 [US1] Register list command in the root command in internal/cli/root.go
+- [X] T005 [US1] Implement list Cobra command with command-specific `--count` flag (default 5) calling `listing.Select` and printing plain-text output via `cmd.OutOrStdout()` in internal/commands/list/list.go
+- [X] T006 [P] [US1] Implement unit tests for list command construction, --count flag default, and plain-text output formatting in internal/commands/list/list_test.go
+- [X] T007 [US1] Register list command in the root command in internal/cli/root.go
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -64,12 +64,12 @@
 
 ### Tests for User Story 2
 
-- [ ] T008 [US2] Add integration tests for JSON default output, `--output json list --count N`, and oversized-count JSON output in tests/integration/list_command_test.go
+- [X] T008 [US2] Add integration tests for JSON default output, `--output json list --count N`, and oversized-count JSON output in tests/integration/list_command_test.go
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Add JSON output branch to the list command that marshals the selected phrases into a compact JSON array where each item is `{"message":"..."}` in internal/commands/list/list.go
-- [ ] T010 [P] [US2] Add unit tests for JSON output format, compactness, array structure, and message field values in internal/commands/list/list_test.go
+- [X] T009 [US2] Add JSON output branch to the list command that marshals the selected phrases into a compact JSON array where each item is `{"message":"..."}` in internal/commands/list/list.go
+- [X] T010 [P] [US2] Add unit tests for JSON output format, compactness, array structure, and message field values in internal/commands/list/list_test.go
 
 **Checkpoint**: User Story 2 is independently functional and testable.
 
@@ -83,12 +83,12 @@
 
 ### Tests for User Story 3
 
-- [ ] T011 [US3] Add unit test in internal/commands/list/list_test.go verifying that the list command returns an error and writes to stderr when the phrase source function is injected to return an empty slice (integration-level test is not feasible because `internal/phrases.init()` panics before command execution when the embedded source is invalid)
-- [ ] T012 [P] [US3] Add unit test for Select when called with empty input slice, confirming it returns an empty result without panicking in internal/listing/listing_test.go
+- [X] T011 [US3] Add unit test in internal/commands/list/list_test.go verifying that the list command returns an error and writes to stderr when the phrase source function is injected to return an empty slice (integration-level test is not feasible because `internal/phrases.init()` panics before command execution when the embedded source is invalid)
+- [X] T012 [P] [US3] Add unit test for Select when called with empty input slice, confirming it returns an empty result without panicking in internal/listing/listing_test.go
 
 ### Implementation for User Story 3
 
-- [ ] T013 [US3] Confirm the list command propagates phrase-load errors from `phrases.Messages()` as a returned error (non-zero exit code, stderr output) in internal/commands/list/list.go
+- [X] T013 [US3] Confirm the list command propagates phrase-load errors from `phrases.Messages()` as a returned error (non-zero exit code, stderr output) in internal/commands/list/list.go
 
 **Checkpoint**: All three user stories are independently functional and testable.
 
@@ -98,8 +98,8 @@
 
 **Purpose**: Documentation and final confidence checks across all stories
 
-- [ ] T014 [P] Update README.md with list command usage examples covering plain-text default, --count, and --output json invocations
-- [ ] T015 [P] Update quickstart verification commands to reflect final command behavior in specs/007-list-random-phrases/quickstart.md
+- [X] T014 [P] Update README.md with list command usage examples covering plain-text default, --count, and --output json invocations
+- [X] T015 [P] Update quickstart verification commands to reflect final command behavior in specs/007-list-random-phrases/quickstart.md
 
 ---
 

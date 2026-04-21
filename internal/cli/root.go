@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/igorzel/mytets/internal/commands/list"
 	"github.com/igorzel/mytets/internal/commands/one"
 	"github.com/igorzel/mytets/internal/flags"
 	"github.com/spf13/cobra"
@@ -19,6 +20,7 @@ func newRootCmd(cfg flags.ParserConfig) *cobra.Command {
 
 	root.AddCommand(newVersionCmd(cfg))
 	root.AddCommand(one.New(cfg))
+	root.AddCommand(list.New(cfg))
 
 	return root
 }
