@@ -43,3 +43,68 @@ func TestParseOutputFormat(t *testing.T) {
 		}
 	}
 }
+
+func TestConsumeLeadingGlobalOutput(t *testing.T) {
+	tests := []struct {
+		name       string
+		in         []string
+		wantFormat flags.OutputFormat
+		wantArgs   []string
+		wantErr    bool
+	}{
+		{
+			name:       "no-global-flag",
+			in:         []string{"one"},
+			wantFormat: flags.OutputFormatText,
+			wantArgs:   []string{"one"},
+		},
+		{
+			name:       "global-long-form",
+			in:         []string{"--output", "json", "one"},
+			wantFormat: flags.OutputFormatJSON,
+			wantArgs:   []string{"one"},
+		},
+		{
+			name:       "global-short-equals",
+			in:         []string{"-o=json", "one"},
+			wantFormat: flags.OutputFormatJSON,
+			wantArgs:   []string{"one"},
+		},
+		{
+			name:    "missing-value",
+			in:      []string{"--output"},
+			wantErr: true,
+		},
+		{
+			name:    "bad-value",
+			in:      []string{"--output", "yaml", "one"},
+			wantErr: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			gotFormat, gotArgs, err := flags.ConsumeLeadingGlobalOutput(tc.in)
+			if tc.wantErr {
+				if err == nil {
+					t.Fatal("expected error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if gotFormat != tc.wantFormat {
+				t.Fatalf("format = %q, want %q", gotFormat, tc.wantFormat)
+			}
+			if len(gotArgs) != len(tc.wantArgs) {
+				t.Fatalf("args len = %d, want %d", len(gotArgs), len(tc.wantArgs))
+			}
+			for i := range gotArgs {
+				if gotArgs[i] != tc.wantArgs[i] {
+					t.Fatalf("args[%d] = %q, want %q", i, gotArgs[i], tc.wantArgs[i])
+				}
+			}
+		})
+	}
+}

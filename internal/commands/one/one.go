@@ -5,12 +5,11 @@ import (
 	"fmt"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/phrases"
 	"github.com/spf13/cobra"
 )
 
-const (
-	message = "Fake message, tbd"
-)
+var randomMessage = phrases.RandomMessage
 
 // Response represents the JSON output format for the one command
 type Response struct {
@@ -23,8 +22,8 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "one",
-		Short: "Display the one command message",
-		Long:  "The one command outputs a fixed message in plain text or JSON format.",
+		Short: "Display one random phrase",
+		Long:  "The one command outputs a random phrase in plain text or JSON format.",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			format, err := flags.ParseOutputFormat(outputRaw)
@@ -53,13 +52,21 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 
 // outputPlain writes the message as plain text to the command output
 func outputPlain(cmd *cobra.Command) error {
-	_, _ = fmt.Fprintln(cmd.OutOrStdout(), message)
+	msg, err := randomMessage()
+	if err != nil {
+		return fmt.Errorf("failed to select phrase: %w", err)
+	}
+	_, _ = fmt.Fprintln(cmd.OutOrStdout(), msg)
 	return nil
 }
 
 // outputJSON writes the message as compact JSON to the command output
 func outputJSON(cmd *cobra.Command) error {
-	resp := Response{Message: message}
+	msg, err := randomMessage()
+	if err != nil {
+		return fmt.Errorf("failed to select phrase: %w", err)
+	}
+	resp := Response{Message: msg}
 	data, err := json.Marshal(resp)
 	if err != nil {
 		return fmt.Errorf("failed to encode JSON: %w", err)

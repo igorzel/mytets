@@ -3,9 +3,12 @@ package one
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"strings"
 	"testing"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/phrases"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +24,9 @@ func TestNew(t *testing.T) {
 	}
 	if cmd.Short == "" {
 		t.Error("Command Short description is empty")
+	}
+	if cmd.Short != "Display one random phrase" {
+		t.Errorf("Command Short = %q, want %q", cmd.Short, "Display one random phrase")
 	}
 	if cmd.RunE == nil {
 		t.Error("Command RunE is nil")
@@ -40,10 +46,12 @@ func TestOutputPlain(t *testing.T) {
 		t.Fatalf("outputPlain() error = %v", err)
 	}
 
-	output := buf.String()
-	expected := message + "\n"
-	if output != expected {
-		t.Errorf("outputPlain() output = %q, want %q", output, expected)
+	output := strings.TrimSpace(buf.String())
+	if output == "" {
+		t.Fatal("outputPlain() produced empty output")
+	}
+	if !contains(phrases.Messages(), output) {
+		t.Errorf("outputPlain() output = %q, not found in embedded phrases", output)
 	}
 }
 
@@ -60,11 +68,11 @@ func TestOutputJSON(t *testing.T) {
 		t.Fatalf("outputJSON() error = %v", err)
 	}
 
-	output := buf.String()
+	output := strings.TrimSpace(buf.String())
 
 	// Verify output can be parsed as JSON
 	var parsed map[string]interface{}
-	if err := json.Unmarshal([]byte(output[:len(output)-1]), &parsed); err != nil {
+	if err := json.Unmarshal([]byte(output), &parsed); err != nil {
 		t.Fatalf("outputJSON() output is not valid JSON: %v", err)
 	}
 
@@ -73,21 +81,25 @@ func TestOutputJSON(t *testing.T) {
 	if !ok {
 		t.Error("JSON output missing 'message' field")
 	}
-	if msgVal != message {
-		t.Errorf("message field = %q, want %q", msgVal, message)
+	msg, ok := msgVal.(string)
+	if !ok {
+		t.Fatalf("message field type = %T, want string", msgVal)
+	}
+	if !contains(phrases.Messages(), msg) {
+		t.Errorf("message field = %q, not found in embedded phrases", msg)
 	}
 }
 
 // T014: TestResponseJSONFormat - Verify exact JSON format with no pretty-printing
 func TestResponseJSONFormat(t *testing.T) {
-	resp := Response{Message: message}
+	resp := Response{Message: "example"}
 	data, err := json.Marshal(resp)
 	if err != nil {
 		t.Fatalf("json.Marshal() error = %v", err)
 	}
 
 	jsonStr := string(data)
-	expected := `{"message":"Fake message, tbd"}`
+	expected := `{"message":"example"}`
 
 	if jsonStr != expected {
 		t.Errorf("JSON format = %q, want %q", jsonStr, expected)
@@ -105,4 +117,30 @@ func TestResponseStruct(t *testing.T) {
 	if resp.Message != "test" {
 		t.Errorf("Response.Message = %q, want %q", resp.Message, "test")
 	}
+}
+
+func TestOutputPlainPropagatesPhraseError(t *testing.T) {
+	original := randomMessage
+	t.Cleanup(func() { randomMessage = original })
+	randomMessage = func() (string, error) {
+		return "", errors.New("boom")
+	}
+
+	cmd := &cobra.Command{Use: "test"}
+	err := outputPlain(cmd)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !strings.Contains(err.Error(), "failed to select phrase") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func contains(values []string, target string) bool {
+	for _, v := range values {
+		if v == target {
+			return true
+		}
+	}
+	return false
 }

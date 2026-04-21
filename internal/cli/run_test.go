@@ -49,6 +49,28 @@ func TestExecuteArgsVersionJSON(t *testing.T) {
 	}
 }
 
+func TestExecuteArgsVersionJSONGlobalFlagBeforeSubcommand(t *testing.T) {
+	original := version.Version
+	t.Cleanup(func() { version.Version = original })
+	version.Version = "9.9.9"
+
+	stdout, stderr, code := cli.ExecuteArgs([]string{"--output", "json", "version"})
+
+	if code != 0 {
+		t.Errorf("expected exit code 0, got %d", code)
+	}
+	if stderr != "" {
+		t.Errorf("expected empty stderr, got %q", stderr)
+	}
+	var payload map[string]string
+	if err := json.Unmarshal([]byte(strings.TrimRight(stdout, "\n")), &payload); err != nil {
+		t.Fatalf("stdout not valid JSON: %v; stdout=%q", err, stdout)
+	}
+	if payload["version"] != "9.9.9" {
+		t.Errorf("expected version '9.9.9', got %q", payload["version"])
+	}
+}
+
 func TestExecuteArgsVersionShortFlag(t *testing.T) {
 	original := version.Version
 	t.Cleanup(func() { version.Version = original })

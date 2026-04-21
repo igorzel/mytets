@@ -34,6 +34,8 @@ JSON output for automation and CI:
 mytets version --output json
 # or
 mytets version -o json
+# or global flag form
+mytets --output json version
 ```
 
 Output:
@@ -70,6 +72,34 @@ echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'
 
 # JSON capture
 mytets version --output json | jq -r .version
+```
+
+### one
+
+Print one random phrase from the embedded phrase set:
+
+```bash
+mytets one
+```
+
+Output (plain text, default; one of multiple embedded messages):
+
+```text
+Example message 2
+```
+
+JSON output:
+
+```bash
+mytets --output json one
+# or
+mytets one --output json
+```
+
+Output:
+
+```json
+{"message":"Example message 2"}
 ```
 
 ## Dependency Rationale

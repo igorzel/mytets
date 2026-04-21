@@ -19,9 +19,9 @@
 
 **Purpose**: Prepare embedded phrase data and package scaffolding
 
-- [ ] T001 Create embedded phrase source file with required messages schema in internal/phrases/phrases.json
-- [ ] T002 [P] Create phrase package scaffold with embed declaration and package API stubs in internal/phrases/phrases.go
-- [ ] T003 [P] Create phrase package test scaffold in internal/phrases/phrases_test.go
+- [X] T001 Create embedded phrase source file with required messages schema in internal/phrases/phrases.json
+- [X] T002 [P] Create phrase package scaffold with embed declaration and package API stubs in internal/phrases/phrases.go
+- [X] T003 [P] Create phrase package test scaffold in internal/phrases/phrases_test.go
 
 ---
 
@@ -31,10 +31,10 @@
 
 **CRITICAL**: No user story work starts before this phase is complete
 
-- [ ] T004 Implement embedded JSON decoding and schema validation for phrases in internal/phrases/phrases.go
-- [ ] T005 Implement random phrase selection using math/rand in internal/phrases/phrases.go
-- [ ] T006 Implement foundational unit tests for loader validation and selector behavior in internal/phrases/phrases_test.go
-- [ ] T007 Refactor command dependency wiring to consume phrase package APIs in internal/commands/one/one.go
+- [X] T004 Implement embedded JSON decoding and schema validation for phrases in internal/phrases/phrases.go
+- [X] T005 Implement random phrase selection using math/rand in internal/phrases/phrases.go
+- [X] T006 Implement foundational unit tests for loader validation and selector behavior in internal/phrases/phrases_test.go
+- [X] T007 Refactor command dependency wiring to consume phrase package APIs in internal/commands/one/one.go
 
 **Checkpoint**: Foundation complete. User stories can now proceed.
 
@@ -48,14 +48,14 @@
 
 ### Tests for User Story 1
 
-- [ ] T008 [US1] Update plain output unit tests to assert random phrase behavior in internal/commands/one/one_test.go
-- [ ] T009 [US1] Update plain output integration tests to verify phrase membership and success exit code in tests/integration/one_command_test.go
+- [X] T008 [US1] Update plain output unit tests to assert random phrase behavior in internal/commands/one/one_test.go
+- [X] T009 [US1] Update plain output integration tests to verify phrase membership and success exit code in tests/integration/one_command_test.go
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Replace fixed message output with random phrase retrieval in plain output branch in internal/commands/one/one.go
-- [ ] T011 [US1] Update command descriptions to reflect random phrase behavior in internal/commands/one/one.go
-- [ ] T012 [US1] Ensure plain path returns descriptive errors to stderr with exit code 1 when phrase retrieval fails in internal/commands/one/one.go
+- [X] T010 [US1] Replace fixed message output with random phrase retrieval in plain output branch in internal/commands/one/one.go
+- [X] T011 [US1] Update command descriptions to reflect random phrase behavior in internal/commands/one/one.go
+- [X] T012 [US1] Ensure plain path returns descriptive errors to stderr with exit code 1 when phrase retrieval fails in internal/commands/one/one.go
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -69,15 +69,15 @@
 
 ### Tests for User Story 2
 
-- [ ] T013 [US2] Update JSON unit tests to validate compact object format and message source in internal/commands/one/one_test.go
-- [ ] T014 [US2] Update JSON integration tests to use global flag order and validate output contract in tests/integration/one_command_test.go
-- [ ] T015 [P] [US2] Add CLI execution test for global flag before subcommand in internal/cli/run_test.go
+- [X] T013 [US2] Update JSON unit tests to validate compact object format and message source in internal/commands/one/one_test.go
+- [X] T014 [US2] Update JSON integration tests to use global flag order and validate output contract in tests/integration/one_command_test.go
+- [X] T015 [P] [US2] Add CLI execution test for global flag before subcommand in internal/cli/run_test.go
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Return selected random phrase from JSON output branch in internal/commands/one/one.go
-- [ ] T017 [US2] Keep JSON response compact single-line marshaling with message field contract in internal/commands/one/one.go
-- [ ] T018 [US2] Ensure invalid output format remains descriptive and propagates as stderr error with exit code 1 in internal/flags/parser.go
+- [X] T016 [US2] Return selected random phrase from JSON output branch in internal/commands/one/one.go
+- [X] T017 [US2] Keep JSON response compact single-line marshaling with message field contract in internal/commands/one/one.go
+- [X] T018 [US2] Ensure invalid output format remains descriptive and propagates as stderr error with exit code 1 in internal/flags/parser.go
 
 **Checkpoint**: User Story 2 is independently functional and testable.
 
@@ -87,10 +87,10 @@
 
 **Purpose**: Finalize documentation and confidence checks across stories
 
-- [ ] T019 [P] Update command usage documentation for plain and JSON random output in README.md
-- [ ] T020 [P] Align quickstart verification commands with final behavior in specs/006-one-random-phrases/quickstart.md
-- [ ] T021 Add integration regression coverage for error and success matrix in tests/integration/one_command_test.go
-- [ ] T022 Add final command-level unit coverage for response formatting and error propagation in internal/commands/one/one_test.go
+- [X] T019 [P] Update command usage documentation for plain and JSON random output in README.md
+- [X] T020 [P] Align quickstart verification commands with final behavior in specs/006-one-random-phrases/quickstart.md
+- [X] T021 Add integration regression coverage for error and success matrix in tests/integration/one_command_test.go
+- [X] T022 Add final command-level unit coverage for response formatting and error propagation in internal/commands/one/one_test.go
 
 ---
 

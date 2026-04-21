@@ -12,8 +12,16 @@ import (
 // Execute runs the CLI with os.Args[1:] and writes output to os.Stdout /
 // os.Stderr. It returns the exit code that the caller should pass to os.Exit.
 func Execute() int {
+	args := os.Args[1:]
 	cfg := flags.NewParserConfig()
+	format, rest, err := flags.ConsumeLeadingGlobalOutput(args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+	cfg.Output = format
 	root := newRootCmd(cfg)
+	root.SetArgs(rest)
 	if err := root.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return 1
@@ -26,13 +34,18 @@ func Execute() int {
 // os.Stderr, or os.Exit.
 func ExecuteArgs(args []string) (stdout, stderr string, exitCode int) {
 	cfg := flags.NewParserConfig()
+	format, rest, err := flags.ConsumeLeadingGlobalOutput(args)
+	if err != nil {
+		return "", err.Error() + "\n", 1
+	}
+	cfg.Output = format
 	root := newRootCmd(cfg)
 
 	outBuf := &bytes.Buffer{}
 	errBuf := &bytes.Buffer{}
 	root.SetOut(outBuf)
 	root.SetErr(errBuf)
-	root.SetArgs(args)
+	root.SetArgs(rest)
 
 	if err := root.Execute(); err != nil {
 		_, _ = io.WriteString(errBuf, err.Error()+"\n")

@@ -25,10 +25,10 @@ go mod download  # Download dependencies (github.com/spf13/cobra already present
 
 Create the embedded data file that will be compiled into the binary:
 
-**File**: `embedded/phrases.json`
+**File**: `internal/phrases/phrases.json`
 
 ```bash
-mkdir -p embedded
+mkdir -p internal/phrases
 ```
 
 **Content** (example):
@@ -535,7 +535,7 @@ time ./mytets --output json one
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `embedded/phrases.json` | Phrase data source | Create |
+| `internal/phrases/phrases.json` | Phrase data source | Create |
 | `internal/phrases/phrases.go` | Phrase loading & random selection | Create |
 | `internal/phrases/phrases_test.go` | Unit tests for phrases | Create |
 | `internal/commands/one/one.go` | One command implementation | Create |
