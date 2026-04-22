@@ -8,9 +8,15 @@ import (
 	"testing"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/igorzel/mytets/internal/phrases"
 	"github.com/spf13/cobra"
 )
+
+func init() {
+	i18n.LoadBundle()
+	i18n.SetLang("en")
+}
 
 // T005: TestNew - Verify command is properly constructed
 func TestNew(t *testing.T) {
@@ -25,8 +31,8 @@ func TestNew(t *testing.T) {
 	if cmd.Short == "" {
 		t.Error("Command Short description is empty")
 	}
-	if cmd.Short != "Display one random phrase" {
-		t.Errorf("Command Short = %q, want %q", cmd.Short, "Display one random phrase")
+	if cmd.Short != i18n.Translate("one.short") {
+		t.Errorf("Command Short = %q, want %q", cmd.Short, i18n.Translate("one.short"))
 	}
 	if cmd.RunE == nil {
 		t.Error("Command RunE is nil")
@@ -143,4 +149,28 @@ func contains(values []string, target string) bool {
 		}
 	}
 	return false
+}
+
+// T014: Test localized "no phrases available" error in Ukrainian.
+func TestOutputPlainNoPhraseErrorUkrainian(t *testing.T) {
+	original := randomMessage
+	t.Cleanup(func() { randomMessage = original })
+	randomMessage = func() (string, error) {
+		return "", errors.New("фрази відсутні")
+	}
+
+	i18n.SetLang("uk")
+	defer i18n.SetLang("en")
+
+	cmd := &cobra.Command{Use: "test"}
+	err := outputPlain(cmd)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	want := i18n.Translate("error.failed_select_phrase")
+	// The format string contains %w, after Errorf the message prefix should match.
+	if !strings.Contains(err.Error(), "не вдалося обрати фразу") {
+		t.Errorf("expected Ukrainian error, got %q", err.Error())
+	}
+	_ = want
 }

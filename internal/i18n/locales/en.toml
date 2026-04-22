@@ -1,0 +1,33 @@
+# Root command
+"root.short" = "mytets — random phrases by Les Podervianskyi"
+
+# Subcommands
+"version.short" = "Print the application version and exit"
+"one.short" = "Display one random phrase"
+"one.long" = "The one command outputs a random phrase in plain text or JSON format."
+"list.short" = "Display a list of random phrases"
+"list.long" = "The list command outputs multiple unique random phrases in plain text or JSON format."
+
+# Flags
+"flag.output" = "Output format: \"text\" (default) or \"json\""
+"flag.count" = "Number of phrases to return"
+
+# Cobra structural labels
+"help.usage" = "Usage:"
+"help.available_commands" = "Available Commands:"
+"help.flags" = "Flags:"
+"help.global_flags" = "Global Flags:"
+"help.additional_help" = "Use \"%s [command] --help\" for more information about a command."
+"help.aliases" = "Aliases:"
+"help.help_for" = "help for %s"
+"help.command_word" = "command"
+"help.flags_word" = "flags"
+"help.default_label" = "default"
+
+# Errors
+"error.no_phrases" = "no phrases available"
+"error.invalid_output_format" = "unsupported output format: \"%s\""
+"error.failed_select_phrase" = "failed to select phrase: %w"
+"error.failed_encode_json" = "failed to encode JSON: %w"
+"error.unknown_command" = "unknown command \"%s\" for \"%s\""
+"error.unknown_flag" = "unknown flag: %s"

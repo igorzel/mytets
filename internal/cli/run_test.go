@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/igorzel/mytets/internal/cli"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/igorzel/mytets/internal/version"
 )
 
@@ -146,5 +147,121 @@ func TestExecuteArgsVersionExtraArgs(t *testing.T) {
 	}
 	if stderr == "" {
 		t.Error("expected non-empty stderr for extra positional arg")
+	}
+}
+
+// T007: Verify Ukrainian help output contains localized root description and structural labels.
+func TestExecuteArgsHelpUkrainian(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "uk_UA.UTF-8")
+	stdout, stderr, code := cli.ExecuteArgs([]string{"help"})
+
+	if code != 0 {
+		t.Errorf("expected exit code 0, got %d (stderr=%q)", code, stderr)
+	}
+
+	for _, want := range []string{
+		"mytets — легкий інструмент командного рядка",
+		"Використання:",
+		"[команда]",
+		"Доступні команди:",
+		"Показати список випадкових фраз",
+		"Показати одну випадкову фразу",
+		"Вивести версію програми та завершити",
+		"Прапори:",
+		"довідка для mytets",
+		"Використовуйте",
+	} {
+		if !strings.Contains(stdout, want) {
+			t.Errorf("Ukrainian help missing %q\nGot:\n%s", want, stdout)
+		}
+	}
+}
+
+// T007: Verify English help output for en locale.
+func TestExecuteArgsHelpEnglish(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "en_US.UTF-8")
+	stdout, stderr, code := cli.ExecuteArgs([]string{"help"})
+
+	if code != 0 {
+		t.Errorf("expected exit code 0, got %d (stderr=%q)", code, stderr)
+	}
+
+	for _, want := range []string{
+		"mytets — a lightweight CLI tool",
+		"Usage:",
+		"[command]",
+		"Available Commands:",
+		"Display a list of random phrases",
+		"Display one random phrase",
+		"Print the application version and exit",
+		"Flags:",
+		"help for mytets",
+	} {
+		if !strings.Contains(stdout, want) {
+			t.Errorf("English help missing %q\nGot:\n%s", want, stdout)
+		}
+	}
+}
+
+// T007: Verify Ukrainian subcommand help for one command.
+func TestExecuteArgsOneHelpUkrainian(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "uk_UA.UTF-8")
+	stdout, stderr, code := cli.ExecuteArgs([]string{"one", "--help"})
+
+	if code != 0 {
+		t.Errorf("expected exit code 0, got %d (stderr=%q)", code, stderr)
+	}
+
+	for _, want := range []string{
+		"Команда one виводить випадкову фразу",
+		"Використання:",
+		"[прапори]",
+		"Прапори:",
+		"довідка для one",
+		"Формат виводу:",
+	} {
+		if !strings.Contains(stdout, want) {
+			t.Errorf("Ukrainian one --help missing %q\nGot:\n%s", want, stdout)
+		}
+	}
+}
+
+// Ensure i18n is initialized for existing tests.
+func init() {
+	i18n.LoadBundle()
+	i18n.SetLang("en")
+}
+
+// T023: Verify English help output matches current behavior.
+func TestExecuteArgsHelpEnglishMatchesCurrent(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "en_US.UTF-8")
+	stdout, _, code := cli.ExecuteArgs([]string{"help"})
+
+	if code != 0 {
+		t.Fatalf("exit code %d", code)
+	}
+	for _, want := range []string{
+		"mytets — a lightweight CLI tool",
+		"Usage:",
+		"[command]",
+		"Available Commands:",
+		"Display a list of random phrases",
+		"Display one random phrase",
+		"Print the application version and exit",
+		"Flags:",
+		"help for mytets",
+		"Use \"mytets [command] --help\" for more information about a command.",
+	} {
+		if !strings.Contains(stdout, want) {
+			t.Errorf("English help missing %q", want)
+		}
 	}
 }

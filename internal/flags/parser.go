@@ -5,6 +5,8 @@ package flags
 import (
 	"fmt"
 	"strings"
+
+	"github.com/igorzel/mytets/internal/i18n"
 )
 
 // OutputFormat represents the supported output serialisation formats.
@@ -42,7 +44,7 @@ func ParseOutputFormat(raw string) (OutputFormat, error) {
 	case OutputFormatJSON:
 		return OutputFormatJSON, nil
 	default:
-		return "", fmt.Errorf("unsupported output format %q: must be one of text, json", raw)
+		return "", fmt.Errorf(i18n.Translate("error.invalid_output_format"), raw)
 	}
 }
 

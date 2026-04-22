@@ -7,8 +7,14 @@ import (
 	"testing"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/spf13/cobra"
 )
+
+func init() {
+	i18n.LoadBundle()
+	i18n.SetLang("en")
+}
 
 func TestNew(t *testing.T) {
 	cfg := flags.ParserConfig{}
@@ -278,3 +284,29 @@ func assertUniqueLines(t *testing.T, lines []string) {
 
 // suppress unused lint for cobra import in tests
 var _ = (*cobra.Command)(nil)
+
+// T015: Test localized "no phrases available" error in Ukrainian.
+func TestEmptyPhraseSourceUkrainian(t *testing.T) {
+	original := messageSource
+	defer func() { messageSource = original }()
+	messageSource = func() []string { return []string{} }
+
+	i18n.SetLang("uk")
+	defer i18n.SetLang("en")
+
+	cfg := flags.ParserConfig{Output: flags.OutputFormatText}
+	cmd := New(cfg)
+
+	var outBuf, errBuf bytes.Buffer
+	cmd.SetOut(&outBuf)
+	cmd.SetErr(&errBuf)
+	cmd.SetArgs([]string{})
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !strings.Contains(err.Error(), "фрази відсутні") {
+		t.Errorf("expected Ukrainian error, got %q", err.Error())
+	}
+}

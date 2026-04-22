@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/igorzel/mytets/internal/phrases"
 	"github.com/spf13/cobra"
 )
@@ -22,8 +23,8 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "one",
-		Short: "Display one random phrase",
-		Long:  "The one command outputs a random phrase in plain text or JSON format.",
+		Short: i18n.Translate("one.short"),
+		Long:  i18n.Translate("one.long"),
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			format, err := flags.ParseOutputFormat(outputRaw)
@@ -44,7 +45,7 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 		&outputRaw,
 		"output", "o",
 		string(cfg.Output),
-		`Output format: "text" (default) or "json"`,
+		i18n.Translate("flag.output"),
 	)
 
 	return cmd
@@ -54,7 +55,7 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 func outputPlain(cmd *cobra.Command) error {
 	msg, err := randomMessage()
 	if err != nil {
-		return fmt.Errorf("failed to select phrase: %w", err)
+		return fmt.Errorf(i18n.Translate("error.failed_select_phrase"), err)
 	}
 	_, _ = fmt.Fprintln(cmd.OutOrStdout(), msg)
 	return nil
@@ -64,12 +65,12 @@ func outputPlain(cmd *cobra.Command) error {
 func outputJSON(cmd *cobra.Command) error {
 	msg, err := randomMessage()
 	if err != nil {
-		return fmt.Errorf("failed to select phrase: %w", err)
+		return fmt.Errorf(i18n.Translate("error.failed_select_phrase"), err)
 	}
 	resp := Response{Message: msg}
 	data, err := json.Marshal(resp)
 	if err != nil {
-		return fmt.Errorf("failed to encode JSON: %w", err)
+		return fmt.Errorf(i18n.Translate("error.failed_encode_json"), err)
 	}
 	_, _ = fmt.Fprintln(cmd.OutOrStdout(), string(data))
 	return nil

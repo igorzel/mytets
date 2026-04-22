@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/igorzel/mytets/internal/listing"
 	"github.com/igorzel/mytets/internal/phrases"
 	"github.com/spf13/cobra"
@@ -21,8 +22,8 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "Display a list of random phrases",
-		Long:  "The list command outputs multiple unique random phrases in plain text or JSON format.",
+		Short: i18n.Translate("list.short"),
+		Long:  i18n.Translate("list.long"),
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			format, err := flags.ParseOutputFormat(outputRaw)
@@ -32,7 +33,7 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 
 			msgs := messageSource()
 			if len(msgs) == 0 {
-				return fmt.Errorf("no phrases available")
+				return fmt.Errorf("%s", i18n.Translate("error.no_phrases"))
 			}
 
 			rng := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -47,12 +48,12 @@ func New(cfg flags.ParserConfig) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&count, "count", 5, "Number of phrases to return")
+	cmd.Flags().IntVar(&count, "count", 5, i18n.Translate("flag.count"))
 	cmd.Flags().StringVarP(
 		&outputRaw,
 		"output", "o",
 		string(cfg.Output),
-		`Output format: "text" (default) or "json"`,
+		i18n.Translate("flag.output"),
 	)
 
 	return cmd

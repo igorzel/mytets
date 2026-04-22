@@ -7,11 +7,15 @@ import (
 	"os"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 )
 
 // Execute runs the CLI with os.Args[1:] and writes output to os.Stdout /
 // os.Stderr. It returns the exit code that the caller should pass to os.Exit.
 func Execute() int {
+	i18n.LoadBundle()
+	i18n.DetectLocale()
+
 	args := os.Args[1:]
 	cfg := flags.NewParserConfig()
 	format, rest, err := flags.ConsumeLeadingGlobalOutput(args)
@@ -23,7 +27,7 @@ func Execute() int {
 	root := newRootCmd(cfg)
 	root.SetArgs(rest)
 	if err := root.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, translateExecError(err))
 		return 1
 	}
 	return 0
@@ -33,6 +37,9 @@ func Execute() int {
 // and captures stdout, stderr, and the exit code without touching os.Stdout,
 // os.Stderr, or os.Exit.
 func ExecuteArgs(args []string) (stdout, stderr string, exitCode int) {
+	i18n.LoadBundle()
+	i18n.DetectLocale()
+
 	cfg := flags.NewParserConfig()
 	format, rest, err := flags.ConsumeLeadingGlobalOutput(args)
 	if err != nil {
@@ -48,7 +55,7 @@ func ExecuteArgs(args []string) (stdout, stderr string, exitCode int) {
 	root.SetArgs(rest)
 
 	if err := root.Execute(); err != nil {
-		_, _ = io.WriteString(errBuf, err.Error()+"\n")
+		_, _ = io.WriteString(errBuf, translateExecError(err).Error()+"\n")
 		exitCode = 1
 	}
 

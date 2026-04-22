@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 	"github.com/igorzel/mytets/internal/version"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,7 @@ func newVersionCmd(cfg flags.ParserConfig) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "version",
-		Short: "Print the application version and exit",
+		Short: i18n.Translate("version.short"),
 		// No positional arguments are accepted.
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -34,7 +35,7 @@ func newVersionCmd(cfg flags.ParserConfig) *cobra.Command {
 			case flags.OutputFormatJSON:
 				out, jsonErr := json.Marshal(versionOutput{Version: version.Version})
 				if jsonErr != nil {
-					return fmt.Errorf("failed to encode JSON: %w", jsonErr)
+					return fmt.Errorf(i18n.Translate("error.failed_encode_json"), jsonErr)
 				}
 				_, _ = fmt.Fprintln(cmd.OutOrStdout(), string(out))
 			default:
@@ -48,7 +49,7 @@ func newVersionCmd(cfg flags.ParserConfig) *cobra.Command {
 		&outputRaw,
 		"output", "o",
 		string(cfg.Output),
-		`Output format: "text" (default) or "json"`,
+		i18n.Translate("flag.output"),
 	)
 
 	return cmd

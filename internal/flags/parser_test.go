@@ -4,7 +4,13 @@ import (
 	"testing"
 
 	"github.com/igorzel/mytets/internal/flags"
+	"github.com/igorzel/mytets/internal/i18n"
 )
+
+func init() {
+	i18n.LoadBundle()
+	i18n.SetLang("en")
+}
 
 func TestNewParserConfigDefaults(t *testing.T) {
 	cfg := flags.NewParserConfig()
@@ -106,5 +112,19 @@ func TestConsumeLeadingGlobalOutput(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// T016: Verify Ukrainian unsupported format error.
+func TestParseOutputFormatUkrainian(t *testing.T) {
+	i18n.SetLang("uk")
+	defer i18n.SetLang("en")
+
+	_, err := flags.ParseOutputFormat("xml")
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if want := `непідтримуваний формат виводу: "xml"`; err.Error() != want {
+		t.Errorf("error = %q, want %q", err.Error(), want)
 	}
 }

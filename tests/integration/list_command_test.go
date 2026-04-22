@@ -283,3 +283,23 @@ func assertJSONMessagesInPhrases(t *testing.T, items []jsonItem, available []str
 		}
 	}
 }
+
+// T028: Verify list output phrases are not localized with Ukrainian locale.
+func TestListCommandPhrasesNotLocalizedUkrainian(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "uk_UA.UTF-8")
+
+	available := phrases.Messages()
+	stdout, stderr, exitCode := cli.ExecuteArgs([]string{"list", "--count", "3"})
+
+	if exitCode != 0 {
+		t.Fatalf("Exit code = %d, want 0 (stderr=%q)", exitCode, stderr)
+	}
+
+	lines := nonEmptyLines(stdout)
+	if len(lines) != 3 {
+		t.Fatalf("got %d lines, want 3", len(lines))
+	}
+	assertAllInPhrases(t, lines, available)
+}

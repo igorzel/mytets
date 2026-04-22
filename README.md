@@ -1,5 +1,10 @@
 # mytets
 
+## Dependencies
+
+- **[github.com/spf13/cobra](https://github.com/spf13/cobra)** — CLI command framework
+- **[github.com/BurntSushi/toml](https://github.com/BurntSushi/toml)** — TOML parsing for localization files. Required because the Go standard library has no TOML parser. Used to load embedded per-language `.toml` translation files at startup.
+
 ## Installation
 
 ```bash

@@ -128,3 +128,24 @@ func contains(values []string, target string) bool {
 	}
 	return false
 }
+
+// T027: Verify phrase content is not localized — Ukrainian locale still shows
+// English phrases from phrases.json.
+func TestOneCommandPhraseNotLocalizedUkrainian(t *testing.T) {
+	t.Setenv("LC_ALL", "")
+	t.Setenv("LC_MESSAGES", "")
+	t.Setenv("LANG", "uk_UA.UTF-8")
+
+	stdout, stderr, exitCode := cli.ExecuteArgs([]string{"one"})
+	if exitCode != 0 {
+		t.Fatalf("Exit code = %d, want 0 (stderr=%q)", exitCode, stderr)
+	}
+
+	plain := strings.TrimSpace(stdout)
+	if plain == "" {
+		t.Fatal("stdout should not be empty")
+	}
+	if !contains(phrases.Messages(), plain) {
+		t.Errorf("phrase %q not found in embedded phrase set — locale should not affect phrase content", plain)
+	}
+}

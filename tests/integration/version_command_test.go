@@ -71,6 +71,28 @@ func runBinary(t *testing.T, binPath string, args ...string) (stdout, stderr str
 	return outBuf.String(), errBuf.String(), exitCode
 }
 
+// runBinaryWithEnv invokes the binary with custom environment variables
+// (in "KEY=VALUE" form) and the given arguments.
+func runBinaryWithEnv(t *testing.T, binPath string, env []string, args ...string) (stdout, stderr string, exitCode int) {
+	t.Helper()
+	cmd := exec.Command(binPath, args...)
+	// Inherit current environment, then override with the provided vars.
+	cmd.Env = append(os.Environ(), env...)
+	var outBuf, errBuf bytes.Buffer
+	cmd.Stdout = &outBuf
+	cmd.Stderr = &errBuf
+
+	err := cmd.Run()
+	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			exitCode = exitErr.ExitCode()
+		} else {
+			t.Fatalf("unexpected error running binary: %v", err)
+		}
+	}
+	return outBuf.String(), errBuf.String(), exitCode
+}
+
 // ── US1: Developer Queries Application Version ──────────────────────────────
 
 // T012 — basic invocation: exit code 0, single-line stdout, empty stderr.
