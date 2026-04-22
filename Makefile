@@ -16,7 +16,7 @@ build:
 # ── Packaging ─────────────────────────────────────────────────────────────────
 
 snap:
-	cd packaging/snap && snapcraft pack
+	snapcraft pack
 
 # ── Maintenance ───────────────────────────────────────────────────────────────
 

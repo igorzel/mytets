@@ -16,7 +16,7 @@ apps:
 parts:
   mytets:
     plugin: nil
-    source: ../..
+    source: .
     source-type: git
     build-snaps:
       - go/latest/stable

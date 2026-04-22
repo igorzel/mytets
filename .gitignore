@@ -37,3 +37,4 @@ bin/
 
 # Build output
 bin/
+/*.snap
