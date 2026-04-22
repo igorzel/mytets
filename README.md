@@ -7,6 +7,23 @@
 
 ## Installation
 
+### Snap Store
+
+```bash
+sudo snap install mytets
+```
+
+### Local snap install
+
+Build and install the snap locally:
+
+```bash
+make snap
+sudo snap install packaging/snap/mytets_*.snap --dangerous
+```
+
+### Go install
+
 ```bash
 go install github.com/igorzel/mytets/cmd/mytets@latest
 ```
@@ -14,7 +31,7 @@ go install github.com/igorzel/mytets/cmd/mytets@latest
 Or build from source:
 
 ```bash
-go build -o ./bin/mytets ./cmd/mytets
+make build
 ```
 
 ## Usage
@@ -54,6 +71,13 @@ Output:
 To embed a version at build time:
 
 ```bash
+make build
+./bin/mytets version  # prints version from git tags
+```
+
+Or manually:
+
+```bash
 go build \
   -ldflags "-X github.com/igorzel/mytets/internal/version.Version=1.0.1" \
   -o ./bin/mytets ./cmd/mytets
@@ -65,6 +89,14 @@ When built without ldflags the version falls back to `dev`:
 go build -o ./bin/mytets ./cmd/mytets
 ./bin/mytets version  # prints: dev
 ```
+
+### Makefile targets
+
+| Target | Description |
+|--------|-------------|
+| `make build` | Compile binary with version injection to `./bin/mytets` |
+| `make snap` | Build a snap package via snapcraft |
+| `make clean` | Remove the `./bin` build directory |
 
 ### CI / Script usage
 

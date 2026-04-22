@@ -1,0 +1,29 @@
+name: mytets
+adopt-info: mytets
+base: core24
+summary: CLI tool for random phrases by Les Podervianskyi
+description: |
+  mytets is a command-line application that prints random
+  phrases by the Ukrainian writer Les Podervianskyi. It
+  supports plain-text and JSON output formats.
+confinement: strict
+license: GPL-3.0
+
+apps:
+  mytets:
+    command: bin/mytets
+
+parts:
+  mytets:
+    plugin: nil
+    source: ../..
+    source-type: git
+    build-snaps:
+      - go/latest/stable
+    override-build: |
+      VERSION="$(git describe --tags --always 2>/dev/null || echo dev)"
+      craftctl set version="$VERSION"
+      go build \
+        -ldflags "-X github.com/igorzel/mytets/internal/version.Version=$VERSION" \
+        -o "$CRAFT_PART_INSTALL/bin/mytets" \
+        ./cmd/mytets
