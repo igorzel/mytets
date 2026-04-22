@@ -19,7 +19,7 @@ Build and install the snap locally:
 
 ```bash
 make snap
-sudo snap install packaging/snap/mytets_*.snap --dangerous
+sudo snap install ./mytets_*.snap --dangerous
 ```
 
 ### Go install
@@ -96,7 +96,65 @@ go build -o ./bin/mytets ./cmd/mytets
 |--------|-------------|
 | `make build` | Compile binary with version injection to `./bin/mytets` |
 | `make snap` | Build a snap package via snapcraft |
+| `make snap-register` | Register snap name in Snap Store (one-time) |
+| `make snap-login` | Interactive login to Snap Store |
+| `make snap-login-file STORE_CREDS_FILE=./snapcraft.login` | Non-interactive login with exported credentials |
+| `make snap-upload` | Build and upload latest local snap artifact |
+| `make snap-publish SNAP_CHANNEL=edge` | Build, upload, and release to channel in one step |
+| `make snap-release REVISION=<n> SNAP_CHANNEL=stable` | Release existing store revision to a channel |
+| `make snap-status` | Show published revisions/channels in Snap Store |
 | `make clean` | Remove the `./bin` build directory |
+
+## Publish to Snap Store
+
+### One-time setup
+
+1. Create a Snapcraft developer account (if you do not already have one).
+2. Register snap name:
+
+  ```bash
+  make snap-register
+  ```
+
+### Per-machine authentication
+
+Interactive login:
+
+```bash
+make snap-login
+```
+
+Or non-interactive login with a credentials file:
+
+```bash
+snapcraft export-login ./snapcraft.login --snaps mytets --channels edge,beta,candidate,stable
+make snap-login-file STORE_CREDS_FILE=./snapcraft.login
+```
+
+### Release flow
+
+1. Build + upload + release to edge:
+
+  ```bash
+  make snap-publish SNAP_CHANNEL=edge
+  ```
+
+2. Verify store status:
+
+  ```bash
+  make snap-status
+  ```
+
+3. Promote same revision to stable later (example):
+
+  ```bash
+  make snap-release REVISION=<store-revision> SNAP_CHANNEL=stable
+  ```
+
+Notes:
+
+- `make snap-upload` uploads without releasing; useful for manual promotion later.
+- For first public release, use `edge` first, validate install, then promote the revision to `stable`.
 
 ### CI / Script usage
 

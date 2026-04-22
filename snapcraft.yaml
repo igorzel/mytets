@@ -1,13 +1,18 @@
 name: mytets
 adopt-info: mytets
 base: core24
+title: mytets
 summary: CLI tool for random phrases by Les Podervianskyi
 description: |
   mytets is a command-line application that prints random
   phrases by the Ukrainian writer Les Podervianskyi. It
   supports plain-text and JSON output formats.
 confinement: strict
+grade: stable
 license: GPL-3.0
+contact: https://github.com/igorzel/mytets/issues
+source-code: https://github.com/igorzel/mytets
+website: https://github.com/igorzel/mytets
 
 apps:
   mytets:
@@ -18,10 +23,20 @@ parts:
     plugin: nil
     source: .
     source-type: git
+    source-depth: 0
     build-snaps:
       - go/latest/stable
     override-build: |
-      VERSION="$(git describe --tags --always 2>/dev/null || echo dev)"
+      VERSION="$(
+        git -C "$CRAFT_PROJECT_DIR" describe --tags --exact-match 2>/dev/null ||
+        git -C "$CRAFT_PROJECT_DIR" describe --tags --abbrev=0 2>/dev/null ||
+        true
+      )"
+      if [ -z "$VERSION" ]; then
+        echo "Error: no git tag found for versioning. Create a tag before running snapcraft pack." >&2
+        exit 1
+      fi
+      echo "Setting version to $VERSION"
       craftctl set version="$VERSION"
       go build \
         -ldflags "-X github.com/igorzel/mytets/internal/version.Version=$VERSION" \
