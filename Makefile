@@ -18,7 +18,7 @@ build:
 
 # ── Packaging ─────────────────────────────────────────────────────────────────
 
-snap:
+snap: snap-clean
 	snapcraft pack
 
 snap-register:
@@ -62,9 +62,13 @@ snap-release:
 snap-status:
 	snapcraft status $(SNAP_NAME)
 
+snap-clean:
+	snapcraft clean mytets
+
 # ── Maintenance ───────────────────────────────────────────────────────────────
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f $(SNAP_NAME)_*.snap
 
-.PHONY: build snap snap-register snap-login snap-login-file snap-upload snap-publish snap-release snap-status clean
+.PHONY: build snap snap-register snap-login snap-login-file snap-upload snap-publish snap-release snap-status snap-clean clean
