@@ -38,3 +38,5 @@ bin/
 # Build output
 bin/
 /*.snap
+
+snapcraft.login
