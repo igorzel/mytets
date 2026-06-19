@@ -11,6 +11,29 @@ SNAP_NAME   := mytets
 SNAP_CHANNEL ?= edge
 STORE_CREDS_FILE ?=
 
+# ── Setup ─────────────────────────────────────────────────────────────────────
+setup:
+	echo "Deleting existing LXD snap installation..."
+	sudo snap remove --purge lxd
+	echo "Setting up the build environment..."
+
+	echo "Installing LXD snap..."
+	sudo snap install lxd
+
+	echo "Adding current user to the lxd group..."
+	sudo usermod -aG lxd ${USER}
+	sudo apt-get --yes install util-linux-extra
+
+	echo "Initializing LXD..."
+	sg lxd -c "lxd init --auto"
+
+	echo "Setting iptables FORWARD policy to ACCEPT..."
+	sudo iptables -I FORWARD -i lxdbr0 -j ACCEPT
+	sudo iptables -I FORWARD -o lxdbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+	echo "Build environment setup complete."
+
+
 # ── Build ─────────────────────────────────────────────────────────────────────
 
 build:
