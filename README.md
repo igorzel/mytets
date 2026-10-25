@@ -99,8 +99,15 @@ sudo snap install ./mytets_*.snap --dangerous
 
 ## Snap Store Publishing
 
-These steps are for project maintainers. Register the Snap name once, then
-authenticate on each machine that will publish:
+These steps are for project maintainers. First prepare the LXD environment on
+each machine that will build Snap packages:
+
+```bash
+make setup
+```
+
+This setup requires `sudo`. Register the Snap name once, then authenticate on
+each machine that will publish:
 
 ```bash
 make snap-register
@@ -125,6 +132,4 @@ To promote an existing revision later, for example to stable:
 make snap-release REVISION=<store-revision> SNAP_CHANNEL=stable
 ```
 
-`make setup` prepares the local LXD environment used for Snap builds and
-requires `sudo`. `make snap-upload` uploads a package without releasing it to a
-channel.
+`make snap-upload` uploads a package without releasing it to a channel.
