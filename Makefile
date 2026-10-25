@@ -13,25 +13,28 @@ STORE_CREDS_FILE ?=
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
 setup:
-	echo "Deleting existing LXD snap installation..."
-	sudo snap remove --purge lxd
-	echo "Setting up the build environment..."
-
-	echo "Installing LXD snap..."
-	sudo snap install lxd
-
-	echo "Adding current user to the lxd group..."
-	sudo usermod -aG lxd ${USER}
+	@echo "Setting up the build environment..."
+	@if ! sudo snap list lxd >/dev/null 2>&1; then sudo snap install lxd; fi
+	sudo usermod -aG lxd "$$USER"
 	sudo apt-get --yes install util-linux-extra
-
-	echo "Initializing LXD..."
-	sg lxd -c "lxd init --auto"
-
-	echo "Setting iptables FORWARD policy to ACCEPT..."
-	sudo iptables -I FORWARD -i lxdbr0 -j ACCEPT
-	sudo iptables -I FORWARD -o lxdbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-	echo "Build environment setup complete."
+	@if ! sg lxd -c "lxc storage show default" >/dev/null 2>&1 || ! sg lxd -c "lxc network show lxdbr0" >/dev/null 2>&1; then \
+		echo "Initializing LXD storage and networking..."; \
+		sg lxd -c "lxd init --auto"; \
+	fi
+	@if ! sg lxd -c "lxc project show snapcraft" >/dev/null 2>&1; then sg lxd -c "lxc project create snapcraft"; fi
+	sg lxd -c "lxc project set snapcraft features.images=true features.profiles=true features.storage.buckets=true features.storage.volumes=true"
+	@if ! sg lxd -c "lxc --project snapcraft profile device get default root path" >/dev/null 2>&1; then \
+		sg lxd -c "lxc --project snapcraft profile device add default root disk path=/ pool=default"; \
+	fi
+	sg lxd -c "lxc --project snapcraft profile device set default root path=/ pool=default"
+	@if ! sg lxd -c "lxc --project snapcraft profile device get default eth0 type" >/dev/null 2>&1; then \
+		sg lxd -c "lxc --project snapcraft profile device add default eth0 nic name=eth0 network=lxdbr0"; \
+	fi
+	sg lxd -c "lxc --project snapcraft profile device set default eth0 name=eth0 network=lxdbr0"
+	@sudo iptables -C FORWARD -i lxdbr0 -j ACCEPT 2>/dev/null || sudo iptables -I FORWARD -i lxdbr0 -j ACCEPT
+	@sudo iptables -C FORWARD -o lxdbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || sudo iptables -I FORWARD -o lxdbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+	@if ! id -nG "$$USER" | tr ' ' '\n' | grep -qx lxd; then echo "Log out and back in for lxd group membership to take effect."; fi
+	@echo "Build environment setup complete."
 
 
 # ── Build ─────────────────────────────────────────────────────────────────────
@@ -94,4 +97,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(SNAP_NAME)_*.snap
 
-.PHONY: build snap snap-register snap-login snap-login-file snap-upload snap-publish snap-release snap-status snap-clean clean
+.PHONY: setup build snap snap-register snap-login snap-login-file snap-upload snap-publish snap-release snap-status snap-clean clean
