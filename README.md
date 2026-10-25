@@ -1,9 +1,10 @@
 # mytets
 
-`mytets` is a small command-line utility that prints random phrases from its
-built-in collection. Get a single phrase, print a batch of unique phrases, or
-choose JSON output for use in scripts. The phrases are included with the
-program, so you do not need an account or an internet connection to use it.
+`mytets` is a small command-line utility that prints random phrases from the
+works of Ukrainian writer and playwright [Les Podervianskyi](https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8C_%D0%9F%D0%BE%D0%B4%D0%B5%D1%80%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D0%B8%D0%B9).
+Get a single phrase, print a batch of unique phrases, or choose JSON output for
+use in scripts. The phrases are included with the program, so you do not need
+an account or an internet connection to use it.
 
 ## Install
 
