@@ -99,19 +99,31 @@ sudo snap install ./mytets_*.snap --dangerous
 
 ## Snap Store Publishing
 
-These steps are for project maintainers. First prepare the LXD environment on
-each machine that will build Snap packages:
+These steps are for project maintainers who publish new releases of `mytets`
+to the Snap Store. Run them in order on a new machine; steps 1–3 only need
+to be done once, step 4 is the routine release workflow.
+
+### 1. Prepare the build environment (once per machine, needs `sudo`)
 
 ```bash
 make setup
 ```
 
-This setup requires `sudo`. Authenticate once per machine, then register the
-Snap name:
+This installs `snapcraft`/`lxd` and configures LXD. On first run it may
+print "Log out and back in for lxd group membership to take effect" — you
+can ignore this and continue right away: every command below runs through
+`sg lxd`, which picks up the new group membership immediately without a
+fresh login session.
+
+### 2. Log in to the Snap Store (once per machine)
+
+You need a Snap Store (Ubuntu One) account that's already an owner or
+collaborator of the `mytets` snap name — if you're a new maintainer, ask an
+existing one to add you via https://dashboard.snapcraft.io/ first,
+otherwise the commands in step 4 will fail with a permission error.
 
 ```bash
-make snap-login                        # one-time login (see below)
-make snap-register
+make snap-login
 ```
 
 `make snap-login` first tries the normal OS-keyring login (Secret Service /
@@ -125,6 +137,19 @@ resulting credentials automatically — no manual
 `export SNAPCRAFT_STORE_CREDENTIALS=...` is ever needed. If you already
 have a `./snapcraft.login` file, re-running `make snap-login` on a
 keyring-less machine is a no-op; remove the file first to re-authenticate.
+
+### 3. Register the snap name (already done, one-time-ever)
+
+The `mytets` name is already registered on the Snap Store, so you normally
+never need this. It's only required once, ever, by whoever first claimed
+the name — running it again will fail with "name already taken", so skip
+this step unless you're publishing under a brand-new snap name:
+
+```bash
+make snap-register
+```
+
+### 4. Release a new version
 
 Publish a build to the edge channel:
 
