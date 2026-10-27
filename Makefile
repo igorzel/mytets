@@ -11,10 +11,10 @@ SNAP_NAME   := mytets
 SNAP_CHANNEL ?= edge
 STORE_CREDS_FILE ?= ./snapcraft.login
 
-# Loads Store credentials from STORE_CREDS_FILE (created by snap-export-login)
-# into SNAPCRAFT_STORE_CREDENTIALS for the rest of the recipe, so maintainers
-# never need to export it manually. If the file is missing, falls back to
-# whatever snapcraft already has in the OS keyring (via snap-login).
+# Loads Store credentials from STORE_CREDS_FILE (created by snap-login's
+# keyring-free fallback) into SNAPCRAFT_STORE_CREDENTIALS for the rest of the
+# recipe, so maintainers never need to export it manually. If the file is
+# missing, falls back to whatever snapcraft already has in the OS keyring.
 LOAD_CREDS = if [ -f "$(STORE_CREDS_FILE)" ]; then export SNAPCRAFT_STORE_CREDENTIALS="$$(cat $(STORE_CREDS_FILE))"; fi
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
@@ -58,22 +58,35 @@ snap-register:
 	@$(LOAD_CREDS); \
 	sg lxd -c "snapcraft register $(SNAP_NAME)"
 
-# Requires a working OS keyring (Secret Service / gnome-keyring / KWallet) to
-# store credentials. On machines without one (e.g. WSL2, headless servers),
-# this fails with "No keyring found" — use snap-export-login instead.
+# Logs in to the Snap Store, picking the right method automatically:
+# tries the normal OS-keyring login first (interactive, same as before);
+# if the environment has no working keyring (WSL2, headless servers, ...),
+# snapcraft fails instantly with "No keyring found" before prompting for
+# anything, so we transparently retry via the keyring-free export-login
+# flow instead, writing credentials to STORE_CREDS_FILE. Every other
+# snap-* target below picks these up automatically — no manual
+# `export SNAPCRAFT_STORE_CREDENTIALS=...` is ever needed.
 snap-login:
-	sg lxd -c "snapcraft login"
-
-# Keyring-free alternative to snap-login: exports Store credentials to a file
-# instead of the OS keyring. Prompts for Ubuntu One email/password/2FA.
-# Run this once per machine; every other snap-* target below picks the
-# credentials up automatically from STORE_CREDS_FILE, so no manual
-# `export SNAPCRAFT_STORE_CREDENTIALS=...` is needed afterwards.
-snap-export-login:
-	sg lxd -c "snapcraft export-login '$(STORE_CREDS_FILE)'"
-	@echo ""
-	@echo "Credentials written to $(STORE_CREDS_FILE) — keep this file secret, do not commit it."
-	@echo "make snap-publish/snap-release/snap-status/snap-revisions will use it automatically."
+	@ERR_LOG="$$(mktemp)"; \
+	sg lxd -c "snapcraft login" 2>"$$ERR_LOG"; \
+	STATUS=$$?; \
+	if [ $$STATUS -eq 0 ]; then \
+		cat "$$ERR_LOG" >&2; rm -f "$$ERR_LOG"; \
+	elif grep -qi "No keyring found" "$$ERR_LOG"; then \
+		rm -f "$$ERR_LOG"; \
+		if [ -f "$(STORE_CREDS_FILE)" ]; then \
+			echo "No OS keyring available here; already logged in via $(STORE_CREDS_FILE)."; \
+			echo "(Remove that file first if you need to re-authenticate.)"; \
+		else \
+			echo "No OS keyring available here; falling back to file-based login."; \
+			sg lxd -c "snapcraft export-login '$(STORE_CREDS_FILE)'"; \
+			echo ""; \
+			echo "Credentials written to $(STORE_CREDS_FILE) — keep this file secret, do not commit it."; \
+		fi; \
+	else \
+		cat "$$ERR_LOG" >&2; rm -f "$$ERR_LOG"; \
+		exit $$STATUS; \
+	fi
 
 # Builds, uploads, and releases a new revision to SNAP_CHANNEL in one step.
 snap-publish: snap
@@ -113,4 +126,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(SNAP_NAME)_*.snap
 
-.PHONY: setup build snap snap-register snap-login snap-export-login snap-publish snap-release snap-status snap-revisions snap-clean clean
+.PHONY: setup build snap snap-register snap-login snap-publish snap-release snap-status snap-revisions snap-clean clean

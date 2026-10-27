@@ -110,20 +110,21 @@ This setup requires `sudo`. Authenticate once per machine, then register the
 Snap name:
 
 ```bash
-make snap-export-login                 # one-time login; writes ./snapcraft.login (keep it secret)
+make snap-login                        # one-time login (see below)
 make snap-register
 ```
 
-`make snap-export-login` prompts for your Ubuntu One email/password/2FA and
-stores the resulting credentials in `./snapcraft.login`. Every other
-`snap-*` target below picks these credentials up automatically — no manual
-`export SNAPCRAFT_STORE_CREDENTIALS=...` is needed.
-
-Alternatively, `make snap-login` logs in via the OS keyring (Secret Service /
-gnome-keyring / KWallet) instead of a file. This works fine on a desktop
-Linux machine, but fails with `No keyring found` on machines without one —
-e.g. WSL2 or a headless server — so `make snap-export-login` is the more
-portable option and is what the rest of this guide assumes.
+`make snap-login` first tries the normal OS-keyring login (Secret Service /
+gnome-keyring / KWallet), prompting for your Ubuntu One email/password/2FA.
+On machines without a working keyring — e.g. WSL2 or a headless server —
+snapcraft fails instantly with `No keyring found`, and `make snap-login`
+transparently falls back to a keyring-free login instead, writing the
+credentials to `./snapcraft.login` (keep this file secret; it's already
+git-ignored). Either way, every other `snap-*` target below picks up the
+resulting credentials automatically — no manual
+`export SNAPCRAFT_STORE_CREDENTIALS=...` is ever needed. If you already
+have a `./snapcraft.login` file, re-running `make snap-login` on a
+keyring-less machine is a no-op; remove the file first to re-authenticate.
 
 Publish a build to the edge channel:
 
