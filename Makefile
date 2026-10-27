@@ -73,18 +73,9 @@ snap-export-login:
 	sg lxd -c "snapcraft export-login '$(STORE_CREDS_FILE)'"
 	@echo ""
 	@echo "Credentials written to $(STORE_CREDS_FILE) — keep this file secret, do not commit it."
-	@echo "make snap-upload/snap-publish/snap-release/snap-status will use it automatically."
+	@echo "make snap-publish/snap-release/snap-status/snap-revisions will use it automatically."
 
-snap-upload: snap
-	@$(LOAD_CREDS); \
-	SNAP_FILE="$$(ls -1t $(SNAP_NAME)_*.snap 2>/dev/null | head -n1)"; \
-	if [ -z "$$SNAP_FILE" ]; then \
-		echo "No snap artifact found. Build first with 'make snap'."; \
-		exit 1; \
-	fi; \
-	echo "Uploading $$SNAP_FILE"; \
-	sg lxd -c "snapcraft upload '$$SNAP_FILE'"
-
+# Builds, uploads, and releases a new revision to SNAP_CHANNEL in one step.
 snap-publish: snap
 	@$(LOAD_CREDS); \
 	SNAP_FILE="$$(ls -1t $(SNAP_NAME)_*.snap 2>/dev/null | head -n1)"; \
@@ -122,4 +113,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(SNAP_NAME)_*.snap
 
-.PHONY: setup build snap snap-register snap-login snap-export-login snap-upload snap-publish snap-release snap-status snap-revisions snap-clean clean
+.PHONY: setup build snap snap-register snap-login snap-export-login snap-publish snap-release snap-status snap-revisions snap-clean clean

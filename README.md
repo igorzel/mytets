@@ -143,10 +143,8 @@ To promote an existing revision later, for example to stable:
 make snap-release REVISION=<store-revision> SNAP_CHANNEL=stable
 ```
 
-`make snap-upload` uploads a package without releasing it to a channel, so
-it won't show up in `make snap-status` (which only reports the revision
-currently live per channel) until you release it with `make snap-release`.
-To see every uploaded revision, released or not:
+`make snap-status` only reports the revision currently live per channel. To
+see every uploaded revision, including ones not released to any channel:
 
 ```bash
 make snap-revisions
