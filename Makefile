@@ -14,6 +14,7 @@ STORE_CREDS_FILE ?=
 # ── Setup ─────────────────────────────────────────────────────────────────────
 setup:
 	@echo "Setting up the build environment..."
+	@if ! sudo snap list snapcraft >/dev/null 2>&1; then sudo snap install snapcraft --classic; fi
 	@if ! sudo snap list lxd >/dev/null 2>&1; then sudo snap install lxd; fi
 	sudo usermod -aG lxd "$$USER"
 	sudo apt-get --yes install util-linux-extra
@@ -45,20 +46,20 @@ build:
 # ── Packaging ─────────────────────────────────────────────────────────────────
 
 snap: snap-clean
-	snapcraft pack
+	sg lxd -c "snapcraft pack"
 
 snap-register:
-	snapcraft register $(SNAP_NAME)
+	sg lxd -c "snapcraft register $(SNAP_NAME)"
 
 snap-login:
-	snapcraft login
+	sg lxd -c "snapcraft login"
 
 snap-login-file:
 	@if [ -z "$(STORE_CREDS_FILE)" ]; then \
 		echo "Usage: make snap-login-file STORE_CREDS_FILE=./snapcraft.login"; \
 		exit 1; \
 	fi
-	snapcraft login --with "$(STORE_CREDS_FILE)"
+	sg lxd -c "snapcraft login --with '$(STORE_CREDS_FILE)'"
 
 snap-upload: snap
 	@SNAP_FILE="$$(ls -1t $(SNAP_NAME)_*.snap 2>/dev/null | head -n1)"; \
@@ -67,7 +68,7 @@ snap-upload: snap
 		exit 1; \
 	fi; \
 	echo "Uploading $$SNAP_FILE"; \
-	snapcraft upload "$$SNAP_FILE"
+	sg lxd -c "snapcraft upload '$$SNAP_FILE'"
 
 snap-publish: snap
 	@SNAP_FILE="$$(ls -1t $(SNAP_NAME)_*.snap 2>/dev/null | head -n1)"; \
@@ -76,20 +77,20 @@ snap-publish: snap
 		exit 1; \
 	fi; \
 	echo "Uploading and releasing $$SNAP_FILE to channel $(SNAP_CHANNEL)"; \
-	snapcraft upload "$$SNAP_FILE" --release="$(SNAP_CHANNEL)"
+	sg lxd -c "snapcraft upload '$$SNAP_FILE' --release='$(SNAP_CHANNEL)'"
 
 snap-release:
 	@if [ -z "$(REVISION)" ]; then \
 		echo "Usage: make snap-release REVISION=<store-revision> SNAP_CHANNEL=<edge|beta|candidate|stable>"; \
 		exit 1; \
 	fi
-	snapcraft release $(SNAP_NAME) "$(REVISION)" "$(SNAP_CHANNEL)"
+	sg lxd -c "snapcraft release $(SNAP_NAME) '$(REVISION)' '$(SNAP_CHANNEL)'"
 
 snap-status:
-	snapcraft status $(SNAP_NAME)
+	sg lxd -c "snapcraft status $(SNAP_NAME)"
 
 snap-clean:
-	snapcraft clean mytets
+	sg lxd -c "snapcraft clean mytets"
 
 # ── Maintenance ───────────────────────────────────────────────────────────────
 
