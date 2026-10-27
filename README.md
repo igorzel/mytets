@@ -106,13 +106,24 @@ each machine that will build Snap packages:
 make setup
 ```
 
-This setup requires `sudo`. Register the Snap name once, then authenticate on
-each machine that will publish:
+This setup requires `sudo`. Authenticate once per machine, then register the
+Snap name:
 
 ```bash
+make snap-export-login                 # one-time login; writes ./snapcraft.login (keep it secret)
 make snap-register
-make snap-login
 ```
+
+`make snap-export-login` prompts for your Ubuntu One email/password/2FA and
+stores the resulting credentials in `./snapcraft.login`. Every other
+`snap-*` target below picks these credentials up automatically — no manual
+`export SNAPCRAFT_STORE_CREDENTIALS=...` is needed.
+
+Alternatively, `make snap-login` logs in via the OS keyring (Secret Service /
+gnome-keyring / KWallet) instead of a file. This works fine on a desktop
+Linux machine, but fails with `No keyring found` on machines without one —
+e.g. WSL2 or a headless server — so `make snap-export-login` is the more
+portable option and is what the rest of this guide assumes.
 
 Publish a build to the edge channel:
 
