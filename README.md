@@ -131,7 +131,7 @@ Publish a build to the edge channel:
 make snap-publish SNAP_CHANNEL=edge
 ```
 
-Check the published revisions and channels:
+Check the currently released revision per channel:
 
 ```bash
 make snap-status
@@ -143,4 +143,11 @@ To promote an existing revision later, for example to stable:
 make snap-release REVISION=<store-revision> SNAP_CHANNEL=stable
 ```
 
-`make snap-upload` uploads a package without releasing it to a channel.
+`make snap-upload` uploads a package without releasing it to a channel, so
+it won't show up in `make snap-status` (which only reports the revision
+currently live per channel) until you release it with `make snap-release`.
+To see every uploaded revision, released or not:
+
+```bash
+make snap-revisions
+```

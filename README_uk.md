@@ -133,7 +133,7 @@ make snap-register
 make snap-publish SNAP_CHANNEL=edge
 ```
 
-Перевірити опубліковані ревізії та канали:
+Перевірити, яка ревізія наразі опублікована в кожному каналі:
 
 ```bash
 make snap-status
@@ -145,4 +145,12 @@ make snap-status
 make snap-release REVISION=<store-revision> SNAP_CHANNEL=stable
 ```
 
-Команда `make snap-upload` завантажує пакунок, але не публікує його в каналі.
+Команда `make snap-upload` завантажує пакунок, але не публікує його в
+каналі, тому вона не з'явиться в `make snap-status` (там показано лише
+ревізію, яка наразі активна в кожному каналі), доки ви не опублікуєте її
+через `make snap-release`. Щоб побачити всі завантажені ревізії, незалежно
+від публікації:
+
+```bash
+make snap-revisions
+```

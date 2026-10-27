@@ -107,6 +107,12 @@ snap-status:
 	@$(LOAD_CREDS); \
 	sg lxd -c "snapcraft status $(SNAP_NAME)"
 
+# Lists every uploaded revision, including ones not released to any channel
+# yet (snap-status only shows the revision currently live per channel).
+snap-revisions:
+	@$(LOAD_CREDS); \
+	sg lxd -c "snapcraft revisions $(SNAP_NAME)"
+
 snap-clean:
 	sg lxd -c "snapcraft clean mytets"
 
@@ -116,4 +122,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(SNAP_NAME)_*.snap
 
-.PHONY: setup build snap snap-register snap-login snap-export-login snap-upload snap-publish snap-release snap-status snap-clean clean
+.PHONY: setup build snap snap-register snap-login snap-export-login snap-upload snap-publish snap-release snap-status snap-revisions snap-clean clean
